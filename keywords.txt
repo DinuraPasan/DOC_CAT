@@ -44,3 +44,14 @@ LEDdesing4		KEYWORD2
 LEDdesing5		KEYWORD2
 LEDdesing6		KEYWORD2
 Shift			KEYWORD2
+########## DotMatrix Arduino Library
+DotMatrix		KEYWORD1
+Set			KEYWORD2
+SetAll			KEYWORD2
+Dotset			KEYWORD2
+Text			KEYWORD2
+Line			KEYWORD2
+Rect			KEYWORD2
+Circle			KEYWORD2
+Trangale		KEYWORD2
+Matrix			KEYWORD2

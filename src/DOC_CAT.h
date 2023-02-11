@@ -5,6 +5,7 @@
 #define DOC_CAT_h
 #include <Arduino.h>
 #include <Wire.h>
+#include <EEPROM.h>
 
 class DS3231 {
   public:
@@ -69,5 +70,22 @@ class HC74595 {
     uint8_t N[20] = {
       63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 191, 134, 219, 207, 230, 237, 253, 135, 255, 239
     };
+};
+
+class DotMatrix {
+  public:
+    DotMatrix(int X, int Y, uint8_t *A);
+    void Set(int x, int y, bool type);
+    void SetAll(bool type);
+    void Dotset(bool type, int DD[8], byte val[]);
+    void Text(char T[], bool type, int D[6]);
+    void Line(int x, int y, int xx, int yy, bool type);
+    void Rect(int x, int y, int width, int height, bool outline, bool colour);
+    void Circle(int x, int y, int r, bool outline, bool colour);
+    void Trangale(int x, int y, int xx, int yy, int xxx, int yyy, bool outline);
+  private:
+    int _X;
+    int _Y;
+    uint8_t *_A;
 };
 #endif

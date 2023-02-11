@@ -4,6 +4,7 @@
 This repository contains many optimized arduino library. Scroll down for more details.
   * HC74595 Arduino Library
   * DS3231 Arduino Library
+  * DotMatrix Arduino Library
 
 The goal is to improve the efficiency of more accurate end user applications while saving the time and money spent on developing embedded systems.
 
@@ -15,6 +16,12 @@ The goal is to improve the efficiency of more accurate end user applications whi
 
 * Controlling DS3231 RTC IC using Arduino
   *  The purpose of this library is to facilitate communication from the Arduino programming environment with the DS3231, the most common RTC IC. Using the DS3231 internal register memory, this library enables the user to activate all DS3231 features and perform date and time calculations. Check the example_folder for more information about the library.
+
+### DotMatrix Arduino Library
+
+* Controlling the LED Dot Matrix from within the Arduino environment.
+  *  Dot Metrix performs the back data processing process required for LED Display, that is, the data (image) required to be displayed in the Display is set up and stored in the memory(RAM). The data is loaded to the LED of the Display collection according to the function(fx) given by the user. Therefore, it can be easily connected with a wider range of LED Drivers(like as 74HC595).
+
 
 ## Getting Started
 
@@ -40,6 +47,8 @@ Dinura Pasan
 
 * 1.0.0
     * Initial Release
+* 1.1.0
+    * Adding the new Dot Matrix library.
 
 ## License
 
