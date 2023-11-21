@@ -5,6 +5,7 @@ This repository contains many optimized arduino library. Scroll down for more de
   * HC74595 Arduino Library
   * DS3231 Arduino Library
   * DotMatrix Arduino Library
+  * LP503X Arduino Library
 
 The goal is to improve the efficiency of more accurate end user applications while saving the time and money spent on developing embedded systems.
 
@@ -22,6 +23,9 @@ The goal is to improve the efficiency of more accurate end user applications whi
 * Controlling the LED Dot Matrix from within the Arduino environment.
   *  Dot Metrix performs the back data processing process required for LED Display, that is, the data (image) required to be displayed in the Display is set up and stored in the memory(RAM). The data is loaded to the LED of the Display collection according to the function(fx) given by the user. Therefore, it can be easily connected with a wider range of LED Drivers(like as 74HC595).
 
+### LP503X Arduino Library
+* Controlling LP5030/LP5036 Constant Current RGB LED Driver ICs with Arduino
+  *  The LP503X Arduino Library, offers seamless integration and control for the LP5030 and LP5036 constant current RGB LED driver ICs within the Arduino environment. This library provides comprehensive functionality to manipulate color-mixing levels, adjust intensity, manage LED banks, and control various configurations of individual LED outputs. Through simple yet powerful functions, developers can easily customize LED behavior, implement light dimming curves, enable power-saving modes, and more, offering a versatile and efficient solution for controlling RGB LED modules.
 
 ## Getting Started
 
@@ -41,7 +45,9 @@ Dinura Pasan
 
 * Contact with me
 
-  * [LinkedIn](https://www.linkedin.com/in/dinura-pasan-873285260)
+  * [LinkedIn](https://www.linkedin.com/in/dinura-p-873285260/)
+  * [Skype](https://join.skype.com/invite/uLRTig6P7dg0)
+  * [Instagram](https://instagram.com/pasandinura?igshid=OGQ5ZDc2ODK2ZA==)
 
 ## Version History
 
@@ -49,6 +55,8 @@ Dinura Pasan
     * Initial Release
 * 1.1.0
     * Adding the new Dot Matrix library.
+* 1.2.0
+    * Adding the new LP503X library.
 
 ## License
 

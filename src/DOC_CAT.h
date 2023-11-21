@@ -7,6 +7,9 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
+// The broadcast address of the LP503X device
+#define BROADCAST 0x1C
+
 class DS3231 {
   public:
     DS3231(uint8_t V);
@@ -88,4 +91,41 @@ class DotMatrix {
     int _Y;
     uint8_t *_A;
 };
+
+class LP503X {
+  public:
+    LP503X(uint8_t I2C_ADDR);
+    void setColour(uint8_t LED, uint8_t value);
+    uint8_t getColour(uint8_t LED);
+    void setBrightness(uint8_t LED, uint8_t value);
+    uint8_t getBrightness(uint8_t LED);
+    void resetRegisters();
+    void setRGBbank(char colour, uint8_t value, uint8_t intensity);
+    void setRGBbank(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity);
+    uint8_t getBankColour(char colour);
+    uint8_t getBankIntensity();
+    void printGrapics();
+    void printBank();
+    void setModule(uint8_t moduleID, bool enable);
+    bool getModule(uint8_t moduleID);
+    void printModule();
+    void logScale(bool status);
+    bool logScale();
+    void Shutdown(bool status);
+    bool Shutdown();
+    void powerSave(bool status);
+    bool powerSave();
+    void autoIncrement(bool status);
+    bool autoIncrement();
+    void PWM_Dithering(bool status);
+    bool PWM_Dithering();
+    void maxCurrent(bool status);
+    bool maxCurrent();
+    void standby_mode();
+    void normal_mode();
+    void print_Settings();
+  private:
+    uint8_t _I2C_ADDR;
+};
+
 #endif
