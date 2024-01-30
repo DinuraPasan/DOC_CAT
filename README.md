@@ -45,7 +45,7 @@ Dinura Pasan
 
 * Contact with me
 
-  * [LinkedIn](https://www.linkedin.com/in/dinura-p-873285260/)
+  * [LinkedIn](https://www.linkedin.com/in/dinurapasan/)
   * [Skype](https://join.skype.com/invite/uLRTig6P7dg0)
   * [Instagram](https://instagram.com/pasandinura?igshid=OGQ5ZDc2ODK2ZA==)
 
