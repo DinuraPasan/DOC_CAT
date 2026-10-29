@@ -1,27 +1,25 @@
-//  Produced by Dinura Pasan in November 2023 and distributed free of charge.
-//  Controlling LP5030, LP5036 constant current RGB LED driver IC from within Arduino environment.
-//  Source Code --> https://github.com/DinuraPasan/DOC_CAT/
+// DOC_CAT LP503X library developed by Dinura Pasan in November 2023.
+// Provides Arduino support for the LP5030 and LP5036 RGB LED driver ICs.
 
-// LP5030 product page -> https://www.ti.com/product/LP5030
-// LP5036 product page -> https://www.ti.com/product/LP5036
-// Datasheet -> https://www.ti.com/lit/gpn/lp5036
+// Source code: https://github.com/DinuraPasan/DOC_CAT/
+// LP5030 datasheet and product information: https://www.ti.com/product/LP5030
+// LP5036 datasheet and product information: https://www.ti.com/product/LP5036
 
 #include <DOC_CAT.h>
 
-//--------------------------------------------------------------------------------------------------------------------
-// LP503X Device Configuration Registers
+// LP503X device configuration registers.
 #define DEVICE_CONFIG0 0x0
 #define DEVICE_CONFIG1 0x1
-// LP503X LED Configuration Registers
+// LP503X RGB LED module configuration registers.
 #define LED_CONFIG0 0x2
 #define LED_CONFIG1 0x3
-// LP503X Bank Brightness-Control Register
+// LP503X global bank brightness register.
 #define BANK_BRIGHTNESS 0x4
-// LP503X Bank Color-Mixing Registers
+// LP503X RGB bank color-mixing registers.
 #define BANK_A_COLOR 0x5
 #define BANK_B_COLOR 0x6
 #define BANK_C_COLOR 0x7
-// LP503X Brightness-Control Registers
+// LP503X individual RGB LED module brightness-control registers.
 #define LED0_BRIGHTNESS 0x8
 #define LED1_BRIGHTNESS 0x9
 #define LED2_BRIGHTNESS 0xA
@@ -34,7 +32,7 @@
 #define LED9_BRIGHTNESS 0x11
 #define LED10_BRIGHTNESS 0x12
 #define LED11_BRIGHTNESS 0x13
-// LP503X Color-Mixing Registers
+// LP503X individual LED output channel color-mixing registers.
 #define OUT0_COLOR 0x14
 #define OUT1_COLOR 0x15
 #define OUT2_COLOR 0x16
@@ -71,9 +69,9 @@
 #define OUT33_COLOR 0x35
 #define OUT34_COLOR 0x36
 #define OUT35_COLOR 0x37
-// LP503X Reset Register
+// LP503X software reset register.
 #define RESET 0x38
-// LP503X's LED_banks enable_mode internal register addresses
+// LP503X RGB LED module selectors for RGB bank control mode (modules 0–11).
 #define LED0_Bank_EN 0
 #define LED1_Bank_EN 1
 #define LED2_Bank_EN 2
@@ -86,22 +84,17 @@
 #define LED9_Bank_EN 9
 #define LED10_Bank_EN 10
 #define LED11_Bank_EN 11
-//--------------------------------------------------------------------------------------------------------------------
 
+/// Initializes the LP503X driver with the specified I2C address.
+/// @param I2C_ADDR I2C address of the LP503X device.
 LP503X::LP503X(uint8_t I2C_ADDR) {
   _I2C_ADDR = I2C_ADDR;
    Wire.begin();
 }
 
-/// Individually setting the color-mixing levels of each LED output
-/// Parameters
-///   LED - LED output pin number to adjust the color mixing level
-///       * For LP5030 this value should be between 0-29.
-///       * For LP5036 this value should be between 0-35.
-///   value - Color mixing level of that LED output pin (this value should be between 0-255)
-///       * 0x00 = The color mixing percentage is 0%.
-///       * 0x80 = The color mixing percentage is 50%.
-///       * 0xFF = The color mixing percentage is 100%.
+/// Sets the color-mixing level of an individual LED output channel.
+/// @param LED   LED output index (0–29 for LP5030, 0–35 for LP5036).
+/// @param value Color-mixing level (0–255).
 void LP503X::setColour(uint8_t LED, uint8_t value) {
   if ((LED >= 0) && (LED <= 35)) {
     Wire.beginTransmission(_I2C_ADDR);
@@ -146,15 +139,9 @@ void LP503X::setColour(uint8_t LED, uint8_t value) {
   }
 }
 
-/// Individually get color-mixing levels for each LED output
-/// Parameters
-///   LED - LED output pin number required to achieve color mixing level
-///       * For LP5030 this value should be between 0-29.
-///       * For LP5036 this value should be between 0-35.
-/// return value - Color mixing level of the selected LED output pin (this value is between 0-255)
-///       * 0x00 = The color mixing percentage is 0%.
-///       * 0x80 = The color mixing percentage is 50%.
-///       * 0xFF = The color mixing percentage is 100%.
+/// Gets the color-mixing level of an individual LED output channel.
+/// @param LED LED output index (0–29 for LP5030, 0–35 for LP5036).
+/// @return Color-mixing level (0–255).
 uint8_t LP503X::getColour(uint8_t LED) {
   if ((LED >= 0) && (LED <= 35)) {
     Wire.beginTransmission(_I2C_ADDR);
@@ -200,15 +187,9 @@ uint8_t LP503X::getColour(uint8_t LED) {
   }
 }
 
-/// Individually setting the intensity levels of each LED output channel
-/// Parameters
-///   LED - LED output pin number to adjust the intensity level
-///       * For LP5030 this value should be between 0-29.
-///       * For LP5036 this value should be between 0-35.
-///   value - Intensity level of that LED output channel (this value should be between 0-255)
-///       * 0x00 = 0% of full intensity
-///       * 0x80 = 50% of full intensity
-///       * 0xFF = 100% of full intensity
+/// Sets the brightness level of an individual RGB LED output channel.
+/// @param LED   LED output index (0–29 for LP5030, 0–35 for LP5036).
+/// @param value Brightness level (0–255).
 void LP503X::setBrightness(uint8_t LED, uint8_t value) {
   if ((LED >= 0) && (LED <= 35)) {
     Wire.beginTransmission(_I2C_ADDR);
@@ -229,15 +210,9 @@ void LP503X::setBrightness(uint8_t LED, uint8_t value) {
   }
 }
 
-/// Individually get intensity levels for each LED output channel
-/// Parameters
-///   LED - LED output pin number required to achieve intensity level
-///       * For LP5030 this value should be between 0-29.
-///       * For LP5036 this value should be between 0-35.
-/// return value - Intensity level of the selected LED output channel (this value is between 0-255)
-///       * 0x00 = 0% of full intensity
-///       * 0x80 = 50% of full intensity
-///       * 0xFF = 100% of full intensity
+/// Gets the brightness level of an individual LED output channel.
+/// @param LED LED output index (0–29 for LP5030, 0–35 for LP5036).
+/// @return Brightness level (0–255).
 uint8_t LP503X::getBrightness(uint8_t LED) {
   if ((LED >= 0) && (LED <= 35)) {
     Wire.beginTransmission(_I2C_ADDR);
@@ -259,7 +234,7 @@ uint8_t LP503X::getBrightness(uint8_t LED) {
   }
 }
 
-/// Setting all internal register values in LP503X IC to default value
+/// Resets all internal registers to their default values.
 void LP503X::resetRegisters() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(RESET);
@@ -267,20 +242,10 @@ void LP503X::resetRegisters() {
   Wire.endTransmission();
 }
 
-/// Individually setting the color-mixing levels of each LED bank
-/// Parameters
-///   colour - The LED bank required to adjust the level of color-mixing
-///       * Red   - Enter 'R' or 'r' to select the red color bank (BANK_A_COLOR).
-///       * Green - Enter 'G' or 'g' to select the green color bank (BANK_B_COLOR).
-///       * Blue  - Enter 'B' or 'b' to select the blue color bank (BANK_C_COLOR).
-///   value - Color mixing level of that LED bank (this value should be between 0-255)
-///       * 0x00 = The color mixing percentage is 0%.
-///       * 0x80 = The color mixing percentage is 50%.
-///       * 0xFF = The color mixing percentage is 100%.
-///   intensity - Intensity level of LED banks. This value should be between 0-255. (This value is global for all LED modules with the LED bank option enabled.)
-///       * 0x00 = 0% of full intensity
-///       * 0x80 = 50% of full intensity
-///       * 0xFF = 100% of full intensity
+/// Sets the color-mixing level and global brightness of an RGB color bank.
+/// @param colour Color bank selector ('R'/'r' for red, 'G'/'g' for green, 'B'/'b' for blue).
+/// @param value Color-mixing level (0–255).
+/// @param intensity Global brightness level for enabled LED banks (0–255).
 void LP503X::setRGBbank(char colour, uint8_t value, uint8_t intensity) {
   if (colour == 'R' || colour == 'r' || colour == 'G' || colour == 'g' || colour == 'B' || colour == 'b') {
     Wire.beginTransmission(_I2C_ADDR);
@@ -300,24 +265,11 @@ void LP503X::setRGBbank(char colour, uint8_t value, uint8_t intensity) {
   }
 }
 
-/// Simultaneously setting the color-mixing levels of each LED bank
-/// Parameters
-///   red - Color mixing level of red LED bank (BANK_A_COLOR). This value should be between 0-255.
-///       * 0x00 = The color mixing percentage is 0%.
-///       * 0x80 = The color mixing percentage is 50%.
-///       * 0xFF = The color mixing percentage is 100%.
-///   green - Color mixing level of green LED bank (BANK_B_COLOR). This value should be between 0-255.
-///       * 0x00 = The color mixing percentage is 0%.
-///       * 0x80 = The color mixing percentage is 50%.
-///       * 0xFF = The color mixing percentage is 100%.
-///   blue - Color mixing level of blue LED bank (BANK_C_COLOR). This value should be between 0-255.
-///       * 0x00 = The color mixing percentage is 0%.
-///       * 0x80 = The color mixing percentage is 50%.
-///       * 0xFF = The color mixing percentage is 100%.
-///   intensity - Intensity level of LED banks. This value is between 0-255. (This value is global for all LED modules with the LED bank option enabled.)
-///       * 0x00 = 0% of full intensity
-///       * 0x80 = 50% of full intensity
-///       * 0xFF = 100% of full intensity
+/// Sets the color-mixing levels of all RGB color banks simultaneously.
+/// @param red       Red bank color-mixing level (0–255).
+/// @param green     Green bank color-mixing level (0–255).
+/// @param blue      Blue bank color-mixing level (0–255).
+/// @param intensity Global brightness level for enabled LED banks (0–255).
 void LP503X::setRGBbank(uint8_t red, uint8_t green, uint8_t blue, uint8_t intensity) {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(BANK_A_COLOR);
@@ -337,16 +289,9 @@ void LP503X::setRGBbank(uint8_t red, uint8_t green, uint8_t blue, uint8_t intens
   Wire.endTransmission();
 }
 
-/// Get the color mixing level of the selected LED bank
-/// Parameters
-///   colour - The name of the LED bank required to get the level of color-mixing.
-///       * Red   - Enter 'R' or 'r' to select the red color bank (BANK_A_COLOR).
-///       * Green - Enter 'G' or 'g' to select the green color bank (BANK_B_COLOR).
-///       * Blue  - Enter 'B' or 'b' to select the blue color bank (BANK_C_COLOR).
-/// return value - Color mixing level of that LED bank. (this value is between 0-255)
-///       * 0x00 = The color mixing percentage is 0%.
-///       * 0x80 = The color mixing percentage is 50%.
-///       * 0xFF = The color mixing percentage is 100%.
+/// Gets the color-mixing level of the specified RGB color bank.
+/// @param colour Color bank selector ('R'/'r' for red, 'G'/'g' for green, 'B'/'b' for blue).
+/// @return Color-mixing level (0–255).
 uint8_t LP503X::getBankColour(char colour) {
   if (colour == 'R' || colour == 'r' || colour == 'G' || colour == 'g' || colour == 'B' || colour == 'b') {
     Wire.beginTransmission(_I2C_ADDR);
@@ -363,11 +308,8 @@ uint8_t LP503X::getBankColour(char colour) {
   }
 }
 
-/// Get the intensity level of all LED banks.
-/// return value - Intensity level of LED banks. This value is between 0-255.  (This value is global for all LED modules with the LED bank option enabled.)
-///       * 0x00 = 0% of full intensity
-///       * 0x80 = 50% of full intensity
-///       * 0xFF = 100% of full intensity
+/// Gets the global brightness level of all enabled LED banks.
+/// @return Bank brightness level (0–255).
 uint8_t LP503X::getBankIntensity() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(BANK_BRIGHTNESS);
@@ -376,14 +318,14 @@ uint8_t LP503X::getBankIntensity() {
   return Wire.read();
 }
 
-/// All LED outputs of the LP503X device display the status of the pins.
+/// Prints the color-mixing and brightness levels of all LED output channels to the Serial Monitor.
 void LP503X::printGrapics() {
   for (byte i = 0; i <= 35; i++) {
     Serial.println("Index : " + String(i) + "\tColor-Mixing level : " + String(getColour(i)) + "\tIntensity level : " + String(getBrightness(i)));
   }
 }
 
-/// Displays all LED banks of the LP503X device and their intensity status.
+/// Prints the color-mixing levels of all RGB banks and their global brightness level to the Serial Monitor.
 void LP503X::printBank() {
   Serial.println("Red bank color mixing level : " + String(getBankColour('R')));
   Serial.println("Green bank color mixing level : " + String(getBankColour('G')));
@@ -391,24 +333,9 @@ void LP503X::printBank() {
   Serial.println("Bank intensity level : " + String(getBankIntensity()));
 }
 
-/// Enabling/disabling the required LED module for LED bank control.
-/// Parameters
-///   moduleID - The name of the LED module to be controlled. (this value should be between 0-11)
-///       * moduleID = LED0_Bank_EN -> Selecting the LED module 0
-///       * moduleID = LED1_Bank_EN -> Selecting the LED module 1
-///       * moduleID = LED2_Bank_EN -> Selecting the LED module 2
-///       * moduleID = LED3_Bank_EN -> Selecting the LED module 3
-///       * moduleID = LED4_Bank_EN -> Selecting the LED module 4
-///       * moduleID = LED5_Bank_EN -> Selecting the LED module 5
-///       * moduleID = LED6_Bank_EN -> Selecting the LED module 6
-///       * moduleID = LED7_Bank_EN -> Selecting the LED module 7
-///       * moduleID = LED8_Bank_EN -> Selecting the LED module 8
-///       * moduleID = LED9_Bank_EN -> Selecting the LED module 9
-///       * moduleID = LED10_Bank_EN -> Selecting the LED module 10
-///       * moduleID = LED11_Bank_EN -> Selecting the LED module 11
-///   enable - The status to be given to the selected LED module.
-///       * enable = true -> Activate the selected LED module for LED bank control mode.
-///       * enable = false -> Disable the selected LED module for LED bank control mode.
+/// Enables or disables an LED module for RGB bank control.
+/// @param moduleID LED module selector (LED0_Bank_EN to LED11_Bank_EN, corresponding to modules 0–11).
+/// @param enable   Set to true to enable or false to disable bank control for the selected module.
 void LP503X::setModule(uint8_t moduleID, bool enable) {
   if (moduleID >= 0 && moduleID <= 7) {
     Wire.beginTransmission(_I2C_ADDR);
@@ -435,24 +362,9 @@ void LP503X::setModule(uint8_t moduleID, bool enable) {
   }
 }
 
-/// Checking if the selected LED module is enabled/disabled for LED bank control mode.
-/// Parameters
-///   moduleID - The name of the LED module to be checked. (this value should be between 0-11)
-///       * moduleID = LED0_Bank_EN -> Selecting the LED module 0
-///       * moduleID = LED1_Bank_EN -> Selecting the LED module 1
-///       * moduleID = LED2_Bank_EN -> Selecting the LED module 2
-///       * moduleID = LED3_Bank_EN -> Selecting the LED module 3
-///       * moduleID = LED4_Bank_EN -> Selecting the LED module 4
-///       * moduleID = LED5_Bank_EN -> Selecting the LED module 5
-///       * moduleID = LED6_Bank_EN -> Selecting the LED module 6
-///       * moduleID = LED7_Bank_EN -> Selecting the LED module 7
-///       * moduleID = LED8_Bank_EN -> Selecting the LED module 8
-///       * moduleID = LED9_Bank_EN -> Selecting the LED module 9
-///       * moduleID = LED10_Bank_EN -> Selecting the LED module 10
-///       * moduleID = LED11_Bank_EN -> Selecting the LED module 11
-/// return value - Status of selected LED module in LED bank control mode.
-///       * enable = true -> The selected LED module is activated for LED bank control mode.
-///       * enable = false -> The selected LED module is disabled for LED bank control mode.
+/// Checks whether an LED module is enabled for RGB bank control.
+/// @param moduleID LED module selector (LED0_Bank_EN to LED11_Bank_EN, corresponding to modules 0–11).
+/// @return true if bank control is enabled; otherwise, false.
 bool LP503X::getModule(uint8_t moduleID) {
   if (moduleID >= 0 && moduleID <= 7) {
     Wire.beginTransmission(_I2C_ADDR);
@@ -471,7 +383,7 @@ bool LP503X::getModule(uint8_t moduleID) {
   }
 }
 
-/// Displays the current state of the LED modules.
+/// Prints the enable/disable status of all 12 LED modules to the Serial Monitor.
 void LP503X::printModule() {
   String text = "";
   for (byte i = 0; i < 12; i++) {
@@ -480,10 +392,8 @@ void LP503X::printModule() {
   }
 }
 
-/// Toggling the light dimming curve of LEDs.
-/// Parameters
-///   status = true -> Logarithmic scale dimming curve.
-///   status = false -> Linear scale dimming curve.
+/// Configures the LED dimming curve.
+/// @param status Set to true for logarithmic dimming or false for linear dimming.
 void LP503X::logScale(bool status) {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -497,10 +407,8 @@ void LP503X::logScale(bool status) {
   Wire.endTransmission();
 }
 
-/// Checking which light dimming curve is currently activated in the LP503X device.
-/// return value
-///       * true -> Logarithmic scale dimming curve.
-///       * false -> Linear scale dimming curve.
+/// Gets the currently configured LED dimming curve.
+/// @return true for logarithmic dimming; false for linear dimming.
 bool LP503X::logScale() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -510,10 +418,8 @@ bool LP503X::logScale() {
   return bitRead(tag, 5);
 }
 
-/// Shutdown all LEDs at once
-/// Parameters
-///   status = true -> Shut down all LEDs.
-///   status = false -> Normal operation.
+/// Enables or disables the global shutdown mode for all LEDs.
+/// @param status Set to true to shut down all LEDs or false for normal operation.
 void LP503X::Shutdown(bool status) {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -527,10 +433,8 @@ void LP503X::Shutdown(bool status) {
   Wire.endTransmission();
 }
 
-/// Checking if all LEDs are Shutdown.
-/// return value
-///       * true -> Yes, Shut down all LEDs.
-///       * false -> No, Normal operation.
+/// Checks whether the global LED shutdown mode is enabled.
+/// @return true if shutdown is enabled; otherwise, false.
 bool LP503X::Shutdown() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -540,10 +444,8 @@ bool LP503X::Shutdown() {
   return bitRead(tag, 0);
 }
 
-/// Enable/disable LP503X device for automatic power saving mode.
-/// Parameters
-///   status = true -> Automatic power-saving mode enabled.
-///   status = false -> Automatic power-saving mode disabled.
+/// Enables or disables automatic power-saving mode.
+/// @param status Set to true to enable or false to disable power-saving mode.
 void LP503X::powerSave(bool status) {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -557,10 +459,8 @@ void LP503X::powerSave(bool status) {
   Wire.endTransmission();
 }
 
-/// Checking whether the LP503X device is enabled/disabled for automatic power saving mode.
-/// return value
-///       * true -> Yes, Automatic power-saving mode enabled.
-///       * false -> No, Automatic power-saving mode disabled.
+/// Checks whether automatic power-saving mode is enabled.
+/// @return true if enabled; otherwise, false.
 bool LP503X::powerSave() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -570,10 +470,8 @@ bool LP503X::powerSave() {
   return bitRead(tag, 4);
 }
 
-/// Enable/disable LP503X device auto-increment feature.
-/// Parameters
-///   status = true -> Automatic increment mode enabled.
-///   status = false -> Automatic increment mode disabled.
+/// Enables or disables the register auto-increment feature.
+/// @param status Set to true to enable or false to disable auto-increment mode.
 void LP503X::autoIncrement(bool status) {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -587,10 +485,8 @@ void LP503X::autoIncrement(bool status) {
   Wire.endTransmission();
 }
 
-/// Checking whether the LP503X device is enabled/disabled for auto-increment feature.
-/// return value
-///       * true -> Yes, Automatic increment mode enabled.
-///       * false -> No, Automatic increment mode disabled.
+/// Checks whether register auto-increment mode is enabled.
+/// @return true if enabled; otherwise, false.
 bool LP503X::autoIncrement() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -600,10 +496,8 @@ bool LP503X::autoIncrement() {
   return bitRead(tag, 3);
 }
 
-/// Enable/disable LP503X device PWM dithering feature.
-/// Parameters
-///   status = true -> PWM dithering mode enabled.
-///   status = false -> PWM dithering mode disabled.
+/// Enables or disables PWM dithering.
+/// @param status Set to true to enable or false to disable PWM dithering.
 void LP503X::PWM_Dithering(bool status) {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -617,10 +511,8 @@ void LP503X::PWM_Dithering(bool status) {
   Wire.endTransmission();
 }
 
-/// Checking whether the LP503X device is enabled/disabled for PWM dithering feature.
-/// return value
-///       * true -> Yes, PWM dithering mode enabled.
-///       * false -> No, PWM dithering mode disabled.
+/// Checks whether PWM dithering is enabled.
+/// @return true if enabled; otherwise, false.
 bool LP503X::PWM_Dithering() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -630,10 +522,8 @@ bool LP503X::PWM_Dithering() {
   return bitRead(tag, 2);
 }
 
-/// Setting the maximum current limit of the LP503X device.
-/// Parameters
-///   status = true -> Output maximum current IMAX = 35 mA.
-///   status = false -> Output maximum current IMAX = 25.5 mA.
+/// Configures the maximum output current limit.
+/// @param status Set to true for 35 mA or false for 25.5 mA.
 void LP503X::maxCurrent(bool status) {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -647,10 +537,8 @@ void LP503X::maxCurrent(bool status) {
   Wire.endTransmission();
 }
 
-/// Obtaining the maximum current limit of the LP503X device.
-/// return value
-///       * true -> Output maximum current IMAX = 35 mA.
-///       * false -> Output maximum current IMAX = 25.5 mA.
+/// Gets the configured maximum output current limit.
+/// @return true for 35 mA; false for 25.5 mA.
 bool LP503X::maxCurrent() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
@@ -660,7 +548,7 @@ bool LP503X::maxCurrent() {
   return bitRead(tag, 1);
 }
 
-/// The device switches to standby mode.
+/// Places the LP503X device in standby mode.
 void LP503X::standby_mode() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG0);
@@ -674,7 +562,7 @@ void LP503X::standby_mode() {
   Wire.endTransmission();
 }
 
-/// The device switches to normal mode.
+/// Places the LP503X device in normal operating mode.
 void LP503X::normal_mode() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG0);
@@ -688,7 +576,7 @@ void LP503X::normal_mode() {
   Wire.endTransmission();
 }
 
-/// Printing all configuration settings of the LP503X device.
+/// Prints the current configuration settings of the LP503X device to the Serial Monitor.
 void LP503X::print_Settings() {
   Wire.beginTransmission(_I2C_ADDR);
   Wire.write(DEVICE_CONFIG1);
