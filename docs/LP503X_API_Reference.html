@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LP503X API Reference</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #34d399;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --border-color: #334155;
+            --code-bg: #090d16;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        #sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            z-index: 100;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            margin-bottom: 1.25rem;
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .nav-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.2rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.35rem 0.6rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+
+        /* Main Content */
+        #main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1200px;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-green);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin: 2.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 1.5rem 0;
+            background-color: var(--bg-secondary);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 0.65rem 0.9rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        td code {
+            color: var(--accent-amber);
+            background-color: var(--code-bg);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        /* Function Cards */
+        .func-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .func-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .func-signature {
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: var(--accent-green);
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .dataType {
+            color: #6699ff;
+        }
+
+        .func-type {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-purple);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 0.5rem;
+        }
+
+        .func-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Code Block Container */
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin: 0.75rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 1rem;
+            background-color: var(--bg-tertiary);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent-blue);
+            color: #000;
+        }
+
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+        }
+
+        /* Syntax Highlighting Colors */
+        .c-kw {
+            color: #f43f5e;
+            font-weight: bold;
+        }
+
+        .c-fn {
+            color: #38bdf8;
+        }
+
+        .c-cm {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .c-num {
+            color: #f59e0b;
+        }
+
+        .c-var {
+            color: #34d399;
+        }
+
+        /* Toast notification */
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: var(--accent-blue);
+            color: #000;
+            text-align: center;
+            border-radius: 4px;
+            padding: 0.75rem;
+            position: fixed;
+            z-index: 1000;
+            bottom: 30px;
+            right: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Back to Top Button */
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 10px;
+            z-index: 999;
+            width: 70px;
+            height: 45px;
+            padding: 0 10px;
+            white-space: nowrap;
+            border: 1px solid var(--accent-blue);
+            border-radius: 50px;
+            background-color: var(--accent-blue);
+            color: var(--bg-primary);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Hover state */
+        #backToTop:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-title">DOC_CAT API</div>
+        <div class="sidebar-subtitle">LP503X API Reference</div>
+
+        <input type="text" id="searchInput" class="search-box" placeholder="Search functions..."
+            onkeyup="filterNav()">
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#main-content"
+                    style="color: inherit; text-decoration: none;">Getting Started</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#overview" class="nav-link">Overview</a></li>
+                <li class="nav-item"><a href="#basic-example" class="nav-link">Basic Example</a></li>
+                <li class="nav-item"><a href="#registers" class="nav-link">Registers & Constants</a></li>
+                <li class="nav-item"><a href="#initialization" class="nav-link">Initialization</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#individual-channel-controls"
+                    style="color: inherit; text-decoration: none;">Individual Channel Control Methods</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#setColour" class="nav-link">setColour(uint8_t, uint8_t)</a>
+                </li>
+                <li class="nav-item"><a href="#getColour" class="nav-link">getColour(uint8_t)</a></li>
+                <li class="nav-item"><a href="#setBrightness" class="nav-link">setBrightness(uint8_t, uint8_t)</a></li>
+                <li class="nav-item"><a href="#getBrightness" class="nav-link">getBrightness(uint8_t)</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#bank-controls" style="color: inherit; text-decoration: none;">Bank
+                    Control Methods</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#setRGBbank-char" class="nav-link">setRGBbank(char, uint8_t, uint8_t)</a>
+                </li>
+                <li class="nav-item"><a href="#setRGBbank-4val" class="nav-link">setRGBbank(uint8_t, uint8_t, uint8_t,
+                        uint8_t)</a></li>
+                <li class="nav-item"><a href="#getBankColour" class="nav-link">getBankColour(char)</a></li>
+                <li class="nav-item"><a href="#getBankIntensity" class="nav-link">getBankIntensity()</a></li>
+                <li class="nav-item"><a href="#setModule" class="nav-link">setModule(uint8_t, bool)</a></li>
+                <li class="nav-item"><a href="#getModule" class="nav-link">getModule(uint8_t)</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#configuration-methods"
+                    style="color: inherit; text-decoration: none;">Configuration Methods</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#logScale-set" class="nav-link">logScale(bool)</a></li>
+                <li class="nav-item"><a href="#logScale-get" class="nav-link">logScale()</a></li>
+                <li class="nav-item"><a href="#Shutdown-set" class="nav-link">Shutdown(bool)</a></li>
+                <li class="nav-item"><a href="#Shutdown-get" class="nav-link">Shutdown()</a></li>
+                <li class="nav-item"><a href="#powerSave-set" class="nav-link">powerSave(bool)</a></li>
+                <li class="nav-item"><a href="#powerSave-get" class="nav-link">powerSave()</a></li>
+                <li class="nav-item"><a href="#autoIncrement-set" class="nav-link">autoIncrement(bool)</a></li>
+                <li class="nav-item"><a href="#autoIncrement-get" class="nav-link">autoIncrement()</a></li>
+                <li class="nav-item"><a href="#PWM_Dithering-set" class="nav-link">PWM_Dithering(bool)</a></li>
+                <li class="nav-item"><a href="#PWM_Dithering-get" class="nav-link">PWM_Dithering()</a></li>
+                <li class="nav-item"><a href="#maxCurrent-set" class="nav-link">maxCurrent(bool)</a></li>
+                <li class="nav-item"><a href="#maxCurrent-get" class="nav-link">maxCurrent()</a></li>
+                <li class="nav-item"><a href="#standby_mode" class="nav-link">standby_mode()</a></li>
+                <li class="nav-item"><a href="#normal_mode" class="nav-link">normal_mode()</a></li>
+                <li class="nav-item"><a href="#resetRegisters" class="nav-link">resetRegisters()</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#diagnostics"
+                    style="color: inherit; text-decoration: none;">Diagnostics Methods</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#printGrapics" class="nav-link">printGrapics()</a></li>
+                <li class="nav-item"><a href="#printBank" class="nav-link">printBank()</a></li>
+                <li class="nav-item"><a href="#print_Settings" class="nav-link">print_Settings()</a></li>
+                <li class="nav-item"><a href="#printModule" class="nav-link">printModule()</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <header>
+            <h1>LP503X API Reference</h1>
+            <div class="header-desc">Complete Arduino API reference for Texas Instruments
+                <a href="https://www.ti.com/product/LP5030" style="color: inherit; text-decoration: none;">LP5030</a>
+                and <a href="https://www.ti.com/product/LP5036"
+                    style="color: inherit; text-decoration: none;">LP5036</a> constant-current RGB LED drivers.
+            </div>
+            <div class="badge-container">
+                <span class="badge">Version 1.2.0</span>
+                <span class="badge">I2C Protocol</span>
+                <span class="badge">LP5030 / LP5036</span>
+                <span class="badge">DOC_CAT Library</span>
+            </div>
+        </header>
+
+        <!-- Overview -->
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>The
+                <code> <a href="https://github.com/DinuraPasan/DOC_CAT/blob/main/src/LP503X.cpp" style="color: inherit; text-decoration: none;">LP503X</a> </code>
+                library provides high-level and low-level control of Texas Instruments <a
+                    href="https://www.ti.com/product/LP5030" style="color: inherit; text-decoration: none;">LP5030
+                    (30-channel)</a> and <a href="https://www.ti.com/product/LP5036"
+                    style="color: inherit; text-decoration: none;">LP5036 (36-channel)</a> I²C LED drivers. It supports
+                RGB color control, linear and logarithmic brightness adjustment, PWM dithering, banked color control,
+                configurable LED current, and standby modes, along with register access and diagnostic functions for
+                easy configuration and debugging in embedded applications.
+            </p>
+        </section>
+
+        <!-- Basic Example -->
+        <section id="basic-example">
+            <h2>Basic Example</h2>
+            <p>Below is a minimal initialization example using the
+                <code><a href="https://github.com/DinuraPasan/DOC_CAT/blob/main/src/LP503X.cpp" style="color: inherit; text-decoration: none;">LP503X</a></code>
+                class with Arduino's standard
+                <code>Wire</code> library.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Arduino</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="c-cm">// Include DOC_CAT header file</span>
+<span class="c-kw">#include</span> <span class="c-var">&lt;DOC_CAT.h&gt;</span>
+
+<span class="c-cm">// Instantiate LP503X object with I2C address (0x30)</span>
+<span class="c-fn">LP503X</span> ledDriver(<span class="c-num">0x30</span>);
+
+<span class="c-kw">void</span> <span class="c-fn">setup</span>() {
+    <span class="c-cm">// Set up normal operating mode and enable logarithmic scaling</span>
+    ledDriver.<span class="c-fn">normal_mode</span>();
+    ledDriver.<span class="c-fn">logScale</span>(<span class="c-kw">true</span>);
+    
+    <span class="c-cm">// Set LED channel 0 color-mixing and brightness levels</span>
+    ledDriver.<span class="c-fn">setColour</span>(<span class="c-num">0</span>, <span class="c-num">255</span>);    <span class="c-cm">// Set color-mixing value to maximum</span>
+    ledDriver.<span class="c-fn">setBrightness</span>(<span class="c-num">0</span>, <span class="c-num">200</span>); <span class="c-cm">// Set intensity level to 200</span>
+}
+
+<span class="c-kw">void</span> <span class="c-fn">loop</span>() {
+    <span class="c-cm">// Main application loop</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Register Definitions -->
+        <section id="registers">
+            <h2>Register Definitions & Constants</h2>
+            <p>All hardware register addresses and '#define' macro constants from
+                <code><a href="https://github.com/DinuraPasan/DOC_CAT/blob/main/src/LP503X.cpp" style="color: inherit; text-decoration: none;">LP503X.cpp</a></code>
+                and
+                <code><a href="https://github.com/DinuraPasan/DOC_CAT/blob/main/src/DOC_CAT.h" style="color: inherit; text-decoration: none;">DOC_CAT.h</a></code>
+                listed individually and categorized by hardware usage.
+            </p>
+
+            <h3>I²C Slave Address</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Define Macro</th>
+                        <th>Hex Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>BROADCAST</code></td>
+                        <td><code>0x1C</code></td>
+                        <td>The LP503X device broadcast slave address</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Configuration Registers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Define Macro</th>
+                        <th>Hex Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>DEVICE_CONFIG0</code></td>
+                        <td><code>0x00</code></td>
+                        <td>Chip enable and standby mode control register</td>
+                    </tr>
+                    <tr>
+                        <td><code>DEVICE_CONFIG1</code></td>
+                        <td><code>0x01</code></td>
+                        <td>Logarithmic scaling, power save, auto-increment, and PWM dithering control</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED_CONFIG0</code></td>
+                        <td><code>0x02</code></td>
+                        <td>Bank assignment for LED modules 0 through 7</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED_CONFIG1</code></td>
+                        <td><code>0x03</code></td>
+                        <td>Bank assignment for LED modules 8 through 11</td>
+                    </tr>
+                    <tr>
+                        <td><code>RESET</code></td>
+                        <td><code>0x38</code></td>
+                        <td>Software reset register (write 0xFF to reset)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Bank Control Registers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Define Macro</th>
+                        <th>Hex Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>BANK_BRIGHTNESS</code></td>
+                        <td><code>0x04</code></td>
+                        <td>Master brightness intensity for banked LED channels</td>
+                    </tr>
+                    <tr>
+                        <td><code>BANK_A_COLOR</code></td>
+                        <td><code>0x05</code></td>
+                        <td>Bank A (Red channel) color control register</td>
+                    </tr>
+                    <tr>
+                        <td><code>BANK_B_COLOR</code></td>
+                        <td><code>0x06</code></td>
+                        <td>Bank B (Green channel) color control register</td>
+                    </tr>
+                    <tr>
+                        <td><code>BANK_C_COLOR</code></td>
+                        <td><code>0x07</code></td>
+                        <td>Bank C (Blue channel) color control register</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Individual LED Brightness Registers (LED0_BRIGHTNESS to LED11_BRIGHTNESS)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Define Macro</th>
+                        <th>Hex Value</th>
+                        <th>Target LED Module</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>LED0_BRIGHTNESS</code></td>
+                        <td><code>0x08</code></td>
+                        <td>LED Module 0 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED1_BRIGHTNESS</code></td>
+                        <td><code>0x09</code></td>
+                        <td>LED Module 1 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED2_BRIGHTNESS</code></td>
+                        <td><code>0x0A</code></td>
+                        <td>LED Module 2 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED3_BRIGHTNESS</code></td>
+                        <td><code>0x0B</code></td>
+                        <td>LED Module 3 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED4_BRIGHTNESS</code></td>
+                        <td><code>0x0C</code></td>
+                        <td>LED Module 4 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED5_BRIGHTNESS</code></td>
+                        <td><code>0x0D</code></td>
+                        <td>LED Module 5 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED6_BRIGHTNESS</code></td>
+                        <td><code>0x0E</code></td>
+                        <td>LED Module 6 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED7_BRIGHTNESS</code></td>
+                        <td><code>0x0F</code></td>
+                        <td>LED Module 7 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED8_BRIGHTNESS</code></td>
+                        <td><code>0x10</code></td>
+                        <td>LED Module 8 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED9_BRIGHTNESS</code></td>
+                        <td><code>0x11</code></td>
+                        <td>LED Module 9 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED10_BRIGHTNESS</code></td>
+                        <td><code>0x12</code></td>
+                        <td>LED Module 10 Brightness Control Register</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED11_BRIGHTNESS</code></td>
+                        <td><code>0x13</code></td>
+                        <td>LED Module 11 Brightness Control Register</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Individual Output Color Registers (OUT0_COLOR to OUT35_COLOR)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Define Macro</th>
+                        <th>Hex Value</th>
+                        <th>Target Hardware Pin Channel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OUT0_COLOR</code></td>
+                        <td><code>0x14</code></td>
+                        <td>Output 0 (LED0 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT1_COLOR</code></td>
+                        <td><code>0x15</code></td>
+                        <td>Output 1 (LED0 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT2_COLOR</code></td>
+                        <td><code>0x16</code></td>
+                        <td>Output 2 (LED0 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT3_COLOR</code></td>
+                        <td><code>0x17</code></td>
+                        <td>Output 3 (LED1 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT4_COLOR</code></td>
+                        <td><code>0x18</code></td>
+                        <td>Output 4 (LED1 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT5_COLOR</code></td>
+                        <td><code>0x19</code></td>
+                        <td>Output 5 (LED1 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT6_COLOR</code></td>
+                        <td><code>0x1A</code></td>
+                        <td>Output 6 (LED2 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT7_COLOR</code></td>
+                        <td><code>0x1B</code></td>
+                        <td>Output 7 (LED2 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT8_COLOR</code></td>
+                        <td><code>0x1C</code></td>
+                        <td>Output 8 (LED2 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT9_COLOR</code></td>
+                        <td><code>0x1D</code></td>
+                        <td>Output 9 (LED3 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT10_COLOR</code></td>
+                        <td><code>0x1E</code></td>
+                        <td>Output 10 (LED3 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT11_COLOR</code></td>
+                        <td><code>0x1F</code></td>
+                        <td>Output 11 (LED3 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT12_COLOR</code></td>
+                        <td><code>0x20</code></td>
+                        <td>Output 12 (LED4 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT13_COLOR</code></td>
+                        <td><code>0x21</code></td>
+                        <td>Output 13 (LED4 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT14_COLOR</code></td>
+                        <td><code>0x22</code></td>
+                        <td>Output 14 (LED4 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT15_COLOR</code></td>
+                        <td><code>0x23</code></td>
+                        <td>Output 15 (LED5 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT16_COLOR</code></td>
+                        <td><code>0x24</code></td>
+                        <td>Output 16 (LED5 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT17_COLOR</code></td>
+                        <td><code>0x25</code></td>
+                        <td>Output 17 (LED5 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT18_COLOR</code></td>
+                        <td><code>0x26</code></td>
+                        <td>Output 18 (LED6 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT19_COLOR</code></td>
+                        <td><code>0x27</code></td>
+                        <td>Output 19 (LED6 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT20_COLOR</code></td>
+                        <td><code>0x28</code></td>
+                        <td>Output 20 (LED6 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT21_COLOR</code></td>
+                        <td><code>0x29</code></td>
+                        <td>Output 21 (LED7 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT22_COLOR</code></td>
+                        <td><code>0x2A</code></td>
+                        <td>Output 22 (LED7 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT23_COLOR</code></td>
+                        <td><code>0x2B</code></td>
+                        <td>Output 23 (LED7 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT24_COLOR</code></td>
+                        <td><code>0x2C</code></td>
+                        <td>Output 24 (LED8 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT25_COLOR</code></td>
+                        <td><code>0x2D</code></td>
+                        <td>Output 25 (LED8 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT26_COLOR</code></td>
+                        <td><code>0x2E</code></td>
+                        <td>Output 26 (LED8 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT27_COLOR</code></td>
+                        <td><code>0x2F</code></td>
+                        <td>Output 27 (LED9 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT28_COLOR</code></td>
+                        <td><code>0x30</code></td>
+                        <td>Output 28 (LED9 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT29_COLOR</code></td>
+                        <td><code>0x31</code></td>
+                        <td>Output 29 (LED9 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT30_COLOR</code></td>
+                        <td><code>0x32</code></td>
+                        <td>Output 30 (LED10 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT31_COLOR</code></td>
+                        <td><code>0x33</code></td>
+                        <td>Output 31 (LED10 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT32_COLOR</code></td>
+                        <td><code>0x34</code></td>
+                        <td>Output 32 (LED10 Blue) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT33_COLOR</code></td>
+                        <td><code>0x35</code></td>
+                        <td>Output 33 (LED11 Red) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT34_COLOR</code></td>
+                        <td><code>0x36</code></td>
+                        <td>Output 34 (LED11 Green) Color Intensity</td>
+                    </tr>
+                    <tr>
+                        <td><code>OUT35_COLOR</code></td>
+                        <td><code>0x37</code></td>
+                        <td>Output 35 (LED11 Blue) Color Intensity</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Bank Enable Mapping Constants (LED0_Bank_EN to LED11_Bank_EN)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Define Macro</th>
+                        <th>Value</th>
+                        <th>Bit Position Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>LED0_Bank_EN</code></td>
+                        <td><code>0</code></td>
+                        <td>LED Module 0 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED1_Bank_EN</code></td>
+                        <td><code>1</code></td>
+                        <td>LED Module 1 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED2_Bank_EN</code></td>
+                        <td><code>2</code></td>
+                        <td>LED Module 2 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED3_Bank_EN</code></td>
+                        <td><code>3</code></td>
+                        <td>LED Module 3 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED4_Bank_EN</code></td>
+                        <td><code>4</code></td>
+                        <td>LED Module 4 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED5_Bank_EN</code></td>
+                        <td><code>5</code></td>
+                        <td>LED Module 5 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED6_Bank_EN</code></td>
+                        <td><code>6</code></td>
+                        <td>LED Module 6 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED7_Bank_EN</code></td>
+                        <td><code>7</code></td>
+                        <td>LED Module 7 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED8_Bank_EN</code></td>
+                        <td><code>8</code></td>
+                        <td>LED Module 8 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED9_Bank_EN</code></td>
+                        <td><code>9</code></td>
+                        <td>LED Module 9 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED10_Bank_EN</code></td>
+                        <td><code>10</code></td>
+                        <td>LED Module 10 Bank Enable Bit Position</td>
+                    </tr>
+                    <tr>
+                        <td><code>LED11_Bank_EN</code></td>
+                        <td><code>11</code></td>
+                        <td>LED Module 11 Bank Enable Bit Position</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Initialization -->
+        <section id="initialization">
+            <h2>Initialization</h2>
+
+            <div class="func-card" id="LP503X_initialization">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">#include</span> &lt;DOC_CAT.h&gt;</div>
+                    <div class="func-type">Initialization</div>
+                </div>
+                <div class="func-desc">Includes the DOC_CAT library and provides the LP503X constructor for initializing
+                    the driver.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Include the DOC_CAT library</span>
+<span class="c-kw">#include</span> <span class="c-var">&lt;DOC_CAT.h&gt;</span>
+
+<span class="c-cm">// Initialize the LP503X with its I2C address</span>
+<span class="c-fn">LP503X</span> ledDriver(<span class="c-num">0x30</span>);</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Individual Channel Control Methods -->
+        <section id="individual-channel-controls">
+            <h2>Individual Channel Control Methods</h2>
+
+            <div class="func-card" id="setColour">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> setColour(<span
+                            class="dataType">uint8_t</span> LED, <span class="dataType">uint8_t</span> value)</div>
+                    <div class="func-type">Individual Channel</div>
+                </div>
+                <div class="func-desc">Sets the color-mixing level of an individual LED output channel.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   LED   - Target LED output index (0-29 for LP5030, 0-35 for LP5036)
+//   value - Desired color-mixing intensity level ranging from 0 to 255
+</span>
+ledDriver.<span class="c-fn">setColour</span>(<span class="c-num">0</span>, <span class="c-num">0xFF</span>);    <span class="c-cm">// Set LED channel 0 to maximum color-mixing level (0xFF)</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="getColour">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">uint8_t</span> getColour(<span
+                            class="dataType">uint8_t</span> LED)</div>
+                    <div class="func-type">Individual Channel</div>
+                </div>
+                <div class="func-desc">Gets the color-mixing level of an individual LED output channel.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   LED    - Target LED output index (0-29 for LP5030, 0-35 for LP5036)
+// Returns:
+//   uint8_t - Color-mixing level (0-255)
+</span>
+<span class="c-kw">uint8_t</span> redVal = ledDriver.<span class="c-fn">getColour</span>(<span class="c-num">0</span>);    <span class="c-cm">// Get color-mixing level for LED channel 0</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="setBrightness">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> setBrightness(<span
+                            class="dataType">uint8_t</span> LED, <span class="dataType">uint8_t</span> value)</div>
+                    <div class="func-type">Individual Channel</div>
+                </div>
+                <div class="func-desc">Sets the brightness level of an individual RGB LED output channel.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   LED   - LED output index (0-29 for LP5030, 0-35 for LP5036)
+//   value - Brightness level (0-255)
+</span>
+ledDriver.<span class="c-fn">setBrightness</span>(<span class="c-num">0</span>, <span class="c-num">0x80</span>);    <span class="c-cm">// Set brightness level to 50% (0x80) for RGB module 0</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="getBrightness">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">uint8_t</span> getBrightness(<span
+                            class="dataType">uint8_t</span> LED)</div>
+                    <div class="func-type">Individual Channel</div>
+                </div>
+                <div class="func-desc">Gets the brightness level of an individual LED output channel.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   LED   - LED output index (0-29 for LP5030, 0-35 for LP5036)
+// Returns:
+//   uint8_t - Brightness level (0-255)
+</span>
+<span class="c-kw">uint8_t</span> bright = ledDriver.<span class="c-fn">getBrightness</span>(<span class="c-num">1</span>);    <span class="c-cm">// Get brightness level for LED channel 1</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bank Control Methods -->
+        <section id="bank-controls">
+            <h2>Bank Control Methods</h2>
+
+            <div class="func-card" id="setRGBbank-char">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> setRGBbank(<span
+                            class="dataType">char</span> colour, <span class="dataType">uint8_t</span> value, <span
+                            class="dataType">uint8_t</span> intensity)</div>
+                    <div class="func-type">Bank Control</div>
+                </div>
+                <div class="func-desc">Sets the color-mixing level and global brightness of an RGB color bank.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   colour    - Color bank selector ('R'/'r' for red, 'G'/'g' for green, 'B'/'b' for blue)
+//   value     - Color-mixing level (0-255)
+//   intensity - Global brightness level for enabled LED banks (0-255)
+</span>
+ledDriver.<span class="c-fn">setRGBbank</span>(<span class="c-num">'R'</span>, <span class="c-num">255</span>, <span class="c-num">200</span>);    <span class="c-cm">// Set red bank color-mixing to 255 and global intensity to 200</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="setRGBbank-4val">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> setRGBbank(<span
+                            class="dataType">uint8_t</span> red, <span class="dataType">uint8_t</span> green, <span
+                            class="dataType">uint8_t</span> blue, <span class="dataType">uint8_t</span> intensity)</div>
+                    <div class="func-type">Bank Control</div>
+                </div>
+                <div class="func-desc">Sets the color-mixing levels of all RGB color banks simultaneously.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   red       - Red bank color-mixing level (0-255)
+//   green     - Green bank color-mixing level (0-255)
+//   blue      - Blue bank color-mixing level (0-255)
+//   intensity - Global brightness level for enabled LED banks (0-255)
+</span>
+ledDriver.<span class="c-fn">setRGBbank</span>(<span class="c-num">255</span>, <span class="c-num">100</span>, <span class="c-num">50</span>, <span class="c-num">255</span>);    <span class="c-cm">// Set bank colors (Red=255, Green=100, Blue=50) and master intensity to 255</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="getBankColour">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">uint8_t</span> getBankColour(<span
+                            class="dataType">char</span> colour)</div>
+                    <div class="func-type">Bank Control</div>
+                </div>
+                <div class="func-desc">Gets the color-mixing level of the specified RGB color bank.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   colour  - Color bank selector ('R'/'r' for red, 'G'/'g' for green, 'B'/'b' for blue)
+// Returns:
+//   uint8_t - Color-mixing level (0-255)
+</span>
+<span class="c-kw">uint8_t</span> bankG = ledDriver.<span class="c-fn">getBankColour</span>(<span class="c-num">'G'</span>);    <span class="c-cm">// Get color-mixing level for Green bank</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="getBankIntensity">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">uint8_t</span> getBankIntensity()</div>
+                    <div class="func-type">Bank Control</div>
+                </div>
+                <div class="func-desc">Gets the global brightness level of all enabled LED banks.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Returns:
+//   uint8_t - Bank brightness level (0-255)
+</span>
+<span class="c-kw">uint8_t</span> bankBright = ledDriver.<span class="c-fn">getBankIntensity</span>();    <span class="c-cm">// Get global brightness level for enabled LED banks</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="setModule">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> setModule(<span
+                            class="dataType">uint8_t</span> moduleID, <span class="dataType">bool</span> enable)</div>
+                    <div class="func-type">Bank Control</div>
+                </div>
+                <div class="func-desc">Enables or disables an LED module for RGB bank control.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   moduleID - LED module selector (LED0_Bank_EN to LED11_Bank_EN for modules 0-11)
+//   enable   - Set to true to enable or false to disable bank control
+</span>
+ledDriver.<span class="c-fn">setModule</span>(<span class="c-num">2</span>, <span class="c-kw">true</span>);    <span class="c-cm">// Enable bank control for LED module 2</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="getModule">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">bool</span> getModule(<span
+                            class="dataType">uint8_t</span> moduleID)</div>
+                    <div class="func-type">Bank Control</div>
+                </div>
+                <div class="func-desc">Checks whether an LED module is enabled for RGB bank control.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   moduleID - LED module selector (LED0_Bank_EN to LED11_Bank_EN for modules 0–11)
+// Returns:
+//   bool     - True if bank control is enabled; otherwise, false
+</span>
+<span class="c-kw">bool</span> isBanked = ledDriver.<span class="c-fn">getModule</span>(<span class="c-num">2</span>);    <span class="c-cm">// Check bank control status for LED module 2</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuration Methods -->
+        <section id="configuration-methods">
+            <h2>Configuration Methods</h2>
+
+            <div class="func-card" id="logScale-set">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> logScale(<span
+                            class="dataType">bool</span> status)</div>
+                    <div class="func-type">Configuration Setter</div>
+                </div>
+                <div class="func-desc">Configures the LED dimming curve.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   status - Set to true for logarithmic dimming or false for linear dimming
+</span>
+ledDriver.<span class="c-fn">logScale</span>(<span class="c-kw">true</span>);    <span class="c-cm">// Enable logarithmic dimming curve</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="logScale-get">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">bool</span> logScale()</div>
+                    <div class="func-type">Configuration Getter</div>
+                </div>
+                <div class="func-desc">Gets the currently configured LED dimming curve.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Returns:
+//   bool - True for logarithmic dimming; false for linear dimming
+</span>
+<span class="c-kw">bool</span> logEnabled = ledDriver.<span class="c-fn">logScale</span>();    <span class="c-cm">// Get current dimming curve configuration</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="Shutdown-set">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> Shutdown(<span
+                            class="dataType">bool</span> status)</div>
+                    <div class="func-type">Power Control Setter</div>
+                </div>
+                <div class="func-desc">Enables or disables the global shutdown mode for all LEDs.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   status - Set to true to shut down all LEDs or false for normal operation
+</span>
+ledDriver.<span class="c-fn">Shutdown</span>(<span class="c-kw">true</span>);    <span class="c-cm">// Enable global shutdown mode</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="Shutdown-get">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">bool</span> Shutdown()</div>
+                    <div class="func-type">Power Control Getter</div>
+                </div>
+                <div class="func-desc">Checks whether the global LED shutdown mode is enabled.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Returns:
+//   bool - True if shutdown is enabled; otherwise, false
+</span>
+<span class="c-kw">bool</span> isShutdown = ledDriver.<span class="c-fn">Shutdown</span>();    <span class="c-cm">// Check global shutdown mode status</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="powerSave-set">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> powerSave(<span
+                            class="dataType">bool</span> status)</div>
+                    <div class="func-type">Configuration Setter</div>
+                </div>
+                <div class="func-desc">Enables or disables automatic power-saving mode.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   status - Set to true to enable or false to disable power-saving mode
+</span>
+ledDriver.<span class="c-fn">powerSave</span>(<span class="c-kw">true</span>);    <span class="c-cm">// Enable automatic power-saving mode</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="powerSave-get">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">bool</span> powerSave()</div>
+                    <div class="func-type">Configuration Getter</div>
+                </div>
+                <div class="func-desc">Checks whether automatic power-saving mode is enabled.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Returns:
+//   bool - True if enabled; otherwise, false
+</span>
+<span class="c-kw">bool</span> psActive = ledDriver.<span class="c-fn">powerSave</span>();    <span class="c-cm">// Check power-saving mode status</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="autoIncrement-set">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> autoIncrement(<span
+                            class="dataType">bool</span> status)</div>
+                    <div class="func-type">Configuration Setter</div>
+                </div>
+                <div class="func-desc">Enables or disables the register auto-increment feature.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   status - Set to true to enable or false to disable auto-increment mode
+</span>
+ledDriver.<span class="c-fn">autoIncrement</span>(<span class="c-kw">true</span>);    <span class="c-cm">// Enable register auto-increment mode</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="autoIncrement-get">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">bool</span> autoIncrement()</div>
+                    <div class="func-type">Configuration Getter</div>
+                </div>
+                <div class="func-desc">Checks whether register auto-increment mode is enabled.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Returns:
+//   bool - True if enabled; otherwise, false
+</span>
+<span class="c-kw">bool</span> autoInc = ledDriver.<span class="c-fn">autoIncrement</span>();    <span class="c-cm">// Check auto-increment mode status</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="PWM_Dithering-set">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> PWM_Dithering(<span
+                            class="dataType">bool</span> status)</div>
+                    <div class="func-type">Configuration Setter</div>
+                </div>
+                <div class="func-desc">Enables or disables PWM dithering.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   status - Set to true to enable or false to disable PWM dithering
+</span>
+ledDriver.<span class="c-fn">PWM_Dithering</span>(<span class="c-kw">true</span>);    <span class="c-cm">// Enable PWM dithering</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="PWM_Dithering-get">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">bool</span> PWM_Dithering()</div>
+                    <div class="func-type">Configuration Getter</div>
+                </div>
+                <div class="func-desc">Checks whether PWM dithering is enabled.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Returns:
+//   bool - True if enabled; otherwise, false
+</span>
+<span class="c-kw">bool</span> dithering = ledDriver.<span class="c-fn">PWM_Dithering</span>();    <span class="c-cm">// Check PWM dithering status</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="maxCurrent-set">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> maxCurrent(<span
+                            class="dataType">bool</span> status)</div>
+                    <div class="func-type">Configuration Setter</div>
+                </div>
+                <div class="func-desc">Configures the maximum output current limit.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   status - Set to true for 35 mA or false for 25.5 mA
+</span>
+ledDriver.<span class="c-fn">maxCurrent</span>(<span class="c-kw">true</span>);    <span class="c-cm">// Set maximum output current limit to 35 mA</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="maxCurrent-get">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">bool</span> maxCurrent()</div>
+                    <div class="func-type">Configuration Getter</div>
+                </div>
+                <div class="func-desc">Gets the configured maximum output current limit.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Returns:
+//   bool - True for 35 mA; false for 25.5 mA
+</span>
+<span class="c-kw">bool</span> isMaxCurrent = ledDriver.<span class="c-fn">maxCurrent</span>();    <span class="c-cm">// Get configured maximum current limit</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="standby_mode">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> standby_mode()</div>
+                    <div class="func-type">Power Control</div>
+                </div>
+                <div class="func-desc">Places the LP503X device in standby mode.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Place LP503X device in standby mode</span>
+ledDriver.<span class="c-fn">standby_mode</span>();</code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="normal_mode">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> normal_mode()</div>
+                    <div class="func-type">Power Control</div>
+                </div>
+                <div class="func-desc">Places the LP503X device in normal operating mode.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Place LP503X device in normal operating mode</span>
+ledDriver.<span class="c-fn">normal_mode</span>();</code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="resetRegisters">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> resetRegisters()</div>
+                    <div class="func-type">System</div>
+                </div>
+                <div class="func-desc">Resets all internal registers to their default values.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Reset all internal registers to their default values</span>
+ledDriver.<span class="c-fn">resetRegisters</span>();</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Diagnostics -->
+        <section id="diagnostics">
+            <h2>Diagnostics Methods</h2>
+
+            <div class="func-card" id="printGrapics">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> printGrapics()</div>
+                    <div class="func-type">Diagnostics</div>
+                </div>
+                <div class="func-desc">Prints the color-mixing and brightness levels of all LED output channels to the
+                    Serial Monitor.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Print channel color-mixing and brightness levels to Serial</span>
+ledDriver.<span class="c-fn">printGrapics</span>();</code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="printBank">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> printBank()</div>
+                    <div class="func-type">Diagnostics</div>
+                </div>
+                <div class="func-desc">Prints the color-mixing levels of all RGB banks and their global brightness level
+                    to the Serial Monitor.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Print RGB bank color-mixing and global brightness levels to Serial</span>
+ledDriver.<span class="c-fn">printBank</span>();</code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="print_Settings">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> print_Settings()</div>
+                    <div class="func-type">Diagnostics</div>
+                </div>
+                <div class="func-desc">Prints the current configuration settings of the LP503X device to the Serial
+                    Monitor.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Print current device configuration settings to Serial Monitor</span>
+ledDriver.<span class="c-fn">print_Settings</span>();</code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="printModule">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> printModule()</div>
+                    <div class="func-type">Diagnostics</div>
+                </div>
+                <div class="func-desc">Prints the enable/disable status of all 12 LED modules to the Serial Monitor.
+                </div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Print enable/disable status of all 12 LED modules to Serial Monitor</span>
+ledDriver.<span class="c-fn">printModule</span>();</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast">Copied to clipboard!</div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" onclick="scrollToTop()" title="Back to Top"><strong>⬆</strong></button>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Search Filter Functionality
+        function filterNav() {
+            const query = document.getElementById('searchInput').value
+                .toLowerCase()
+                .replace(/\*/g, '')
+                .trim();
+
+            const searchWords = query.split(/\s+/).filter(Boolean);
+            const sections = document.querySelectorAll('.nav-section');
+
+            sections.forEach(section => {
+                const title = section.querySelector('.nav-section-title');
+                const navItems = section.querySelectorAll('.nav-item');
+
+                const titleText = title.textContent.toLowerCase()
+                    .replace(/\s+/g, ' ').trim();
+
+                const titleMatch = searchWords.every(word =>
+                    titleText.includes(word)
+                );
+
+                let hasMatch = false;
+
+                navItems.forEach(item => {
+                    const itemText = item.textContent.toLowerCase()
+                        .replace(/\s+/g, ' ').trim();
+
+                    const itemMatch = searchWords.every(word =>
+                        itemText.includes(word)
+                    );
+
+                    item.style.display = (itemMatch || titleMatch) ? 'block' : 'none';
+
+                    if (itemMatch) hasMatch = true;
+                });
+
+                section.style.display = (titleMatch || hasMatch) ? 'block' : 'none';
+            });
+        }
+        // Clipboard Copy Handler with Fallback & Visual Feedback
+        function copyCode(buttonElement) {
+            const container = buttonElement.closest('.code-container');
+            const codeBlock = container.querySelector('code');
+            const codeText = codeBlock.innerText || codeBlock.textContent;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(codeText).then(() => {
+                    showToast(buttonElement);
+                }).catch(err => {
+                    fallbackCopy(codeText, buttonElement);
+                });
+            } else {
+                fallbackCopy(codeText, buttonElement);
+            }
+        }
+
+        function fallbackCopy(text, buttonElement) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                showToast(buttonElement);
+            } catch (err) {
+                console.error('Fallback copy failed: ', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(buttonElement) {
+            const originalText = buttonElement.textContent;
+            buttonElement.textContent = 'Copied!';
+            buttonElement.style.backgroundColor = 'var(--accent-green)';
+            buttonElement.style.color = '#000';
+
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                buttonElement.textContent = originalText;
+                buttonElement.style.backgroundColor = '';
+                buttonElement.style.color = '';
+                toast.classList.remove('show');
+            }, 1800);
+        }
+
+        // Back to Top Functionality
+        const backToTop = document.getElementById("backToTop");
+
+        window.addEventListener("scroll", () => {
+            backToTop.style.display = window.scrollY > 50 ? "block" : "none";
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+    </script>
+
+</body>
+
+</html>
