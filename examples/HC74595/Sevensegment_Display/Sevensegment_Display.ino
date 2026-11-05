@@ -1,8 +1,3 @@
-//  Produced by Dinura Pasan in February 2023 and distributed free of charge.
-//  Controlling the 74HC595 shift registers IC from within the Arduino environment.
-//  Source Code --> https://github.com/DinuraPasan/DOC_CAT/
-//  Control Sevensegment display with 74HC595 IC.
-
 //                        ----Circuit Diagram----
 
 //      |¯ ¯ 0 ¯ ¯|      |¯ ¯ 0 ¯ ¯|      |¯ ¯ 0 ¯ ¯|      |¯ ¯ 0 ¯ ¯|
@@ -42,10 +37,10 @@
 //  IC 02   Q2      -- >       Sevensegment Display Comman 03
 //  IC 02   Q3      -- >       Sevensegment Display Comman 04
 
-uint8_t SER = 10;     // pin 14 on the 74HC595  outher name DS pin(data pin)
-uint8_t RCLK = 11;    // pin 12 on the 74HC595  outher name ST_CP pin(latch pin)
-uint8_t SRCLK = 12;   // pin 11 on the 74HC595  outher name SH_CP pin(clock pin)
-uint8_t NUMOFIC = 2;  // Number of IC
+uint8_t SER = 10;     // Arduino pin connected to pin 14 (DS / data) of the 74HC595.
+uint8_t RCLK = 11;    // Arduino pin connected to pin 12 (ST_CP / latch) of the 74HC595.
+uint8_t SRCLK = 12;   // Arduino pin connected to pin 11 (SH_CP / clock) of the 74HC595.
+uint8_t NUMOFIC = 2;  // Number of cascaded 74HC595 ICs.
 
 #include <DOC_CAT.h>
 HC74595 Shift(NUMOFIC, SER, RCLK, SRCLK);
@@ -53,11 +48,16 @@ HC74595 Shift(NUMOFIC, SER, RCLK, SRCLK);
 void setup() {}
 
 void loop() {
-  // loop function not add the delay time.
-  // Syntax(uint8_t valve, uint8_t Start_display_number_place, int Max_display_count, boolean type(type == true --> common anode /// type == false --> common cathode))
+  // Display a custom segment pattern on the selected digit.
+  // Syntax: Sevensegment(uint8_t segments, uint8_t digitPosition, uint8_t digitCount, bool commonAnode).
+  // The binary value determines which segments are illuminated.
   Shift.Sevensegment(B01011101, 0, 4, true);
-  // Syntax(double valve, uint8_t Start_display_number_place, int Max_display_count, boolean type(type == true --> common anode /// type == false --> common cathode))
+
+  // Display a floating-point number, including decimal points and negative signs.
+  // Syntax: SegmentNumber(double value, uint8_t digitPosition, uint8_t digitCount, bool commonAnode).
   Shift.SegmentNumber(-2.1, 1, 4, true);
-  // Syntax(int valve, uint8_t Start_display_number_place, int Max_display_count, boolean type(type == true --> common anode /// type == false --> common cathode))
+
+  // Display an integer number on the multiplexed seven-segment display.
+  // Syntax: SegmentNumber(int value, uint8_t digitPosition, uint8_t digitCount, bool commonAnode).
   Shift.SegmentNumber(145, 1, 4, true);
 }
