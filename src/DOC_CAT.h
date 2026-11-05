@@ -18,7 +18,6 @@ class HC74595 {
     void SetAll(bool state);
     void NumberToBinary(int value, bool reverse);
     void CharacterToBinary(char value, bool reverse);
-    void SetMappedOutput(bool state, int pin, int offset[]); 
     void Sevensegment(uint8_t segments, uint8_t digitPosition, uint8_t digitCount, bool commonAnode);
     void SegmentNumber(double value, uint8_t digitPosition, uint8_t digitCount, bool commonAnode);
     void SegmentNumber(int value, uint8_t digitPosition, uint8_t digitCount, bool commonAnode);
@@ -34,7 +33,7 @@ class HC74595 {
     uint8_t _RCLK;
     uint8_t _SRCLK;
     uint8_t *D;
-    uint8_t N[20] = {
+    uint8_t SEGMENT_PATTERNS[20] = {
       63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 191, 134, 219, 207, 230, 237, 253, 135, 255, 239
     };
 };

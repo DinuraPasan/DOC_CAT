@@ -75,24 +75,6 @@ void HC74595::CharacterToBinary(char value, bool reverse) {
   NumberToBinary(int(value), reverse);
 }
 
-/// Sets the state of a specified output based on its mapped location and updates the shift registers.
-/// @param state Desired output state (HIGH or LOW).
-/// @param pin Output position within the mapped group.
-/// @param offset Array containing the starting bit positions of mapped output groups.
-void HC74595::SetMappedOutput(bool state, int pin, int offset[]) {
-  int count = 0;
-  for (int i = 0; i < _IC * 8; i++) {
-    if (offset[i + 1] > offset[i])  count++;
-    else                              break;
-  }
-  for (int i = 0; i <= count; i++) {
-    if ((offset[i + 1] - offset[i]) > pin) {
-      NoUpdate(offset[i] + pin, state);
-      Update();
-    }
-  }
-}
-
 /// Displays a digit on a multiplexed seven-segment display.
 /// @param segments Bit pattern representing the segments to illuminate.
 /// @param digitPosition Position of the digit to activate (0-based).
@@ -124,10 +106,10 @@ void HC74595::SegmentNumber(double value, uint8_t digitPosition, uint8_t digitCo
     if (buffer[i] == '-') {
       Sevensegment(B01000000, digitPosition, digitCount, commonAnode);
     } else if (buffer[i + 1] == '.') {
-      Sevensegment(N[String(buffer[i]).toInt() + 10], digitPosition + count, digitCount, commonAnode);
+      Sevensegment(SEGMENT_PATTERNS[String(buffer[i]).toInt() + 10], digitPosition + count, digitCount, commonAnode);
       i = i + 1;
     } else {
-      Sevensegment(N[String(buffer[i]).toInt()], digitPosition + count, digitCount, commonAnode);
+      Sevensegment(SEGMENT_PATTERNS[String(buffer[i]).toInt()], digitPosition + count, digitCount, commonAnode);
     }
     count++;
   }
@@ -147,10 +129,10 @@ void HC74595::SegmentNumber(int value, uint8_t digitPosition, uint8_t digitCount
     if (buffer[i] == '-') {
       Sevensegment(B01000000, digitPosition, digitCount, commonAnode);
     } else if (buffer[i + 1] == '.') {
-      Sevensegment(N[String(buffer[i]).toInt() + 10], digitPosition + count, digitCount, commonAnode);
+      Sevensegment(SEGMENT_PATTERNS[String(buffer[i]).toInt() + 10], digitPosition + count, digitCount, commonAnode);
       i = i + 1;
     } else {
-      Sevensegment(N[String(buffer[i]).toInt()], digitPosition + count, digitCount, commonAnode);
+      Sevensegment(SEGMENT_PATTERNS[String(buffer[i]).toInt()], digitPosition + count, digitCount, commonAnode);
     }
     count++;
   }
