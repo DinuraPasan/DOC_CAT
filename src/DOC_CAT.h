@@ -14,20 +14,20 @@ class HC74595 {
   public:
     HC74595(uint8_t IC, uint8_t SER, uint8_t RCLK, uint8_t SRCLK);
     void Update();
-    void NoUpdate(int index, bool V);
-    void SetAll(bool V);
-    void NumberToBinary(int valve, bool V);
-    void CharacterToBinary(char val, bool V);
-    void Location(bool valve, int pin, int Location[]);
-    void Sevensegment(uint8_t val, uint8_t NU, uint8_t Max, bool V);
-    void SegmentNumber(double val, uint8_t NU, uint8_t Max, bool V);
-    void SegmentNumber(int val, uint8_t NU, uint8_t Max, bool V);
-    void LEDdesing1(int d, uint8_t pin);
-    void LEDdesing2(int d, uint8_t pin);
-    void LEDdesing3(uint8_t count, int d, uint8_t Min, uint8_t Max, bool V);
-    void LEDdesing4(uint8_t count, int d, uint8_t Min, uint8_t Max);
-    void LEDdesing5(uint8_t count, int d, uint8_t Min, uint8_t Max);
-    void LEDdesing6(uint8_t count, int d, uint8_t Min, uint8_t Max, uint8_t devide);
+    void NoUpdate(int index, bool state);
+    void SetAll(bool state);
+    void NumberToBinary(int value, bool reverse);
+    void CharacterToBinary(char value, bool reverse);
+    void SetMappedOutput(bool state, int pin, int offset[]); 
+    void Sevensegment(uint8_t segments, uint8_t digitPosition, uint8_t digitCount, bool commonAnode);
+    void SegmentNumber(double value, uint8_t digitPosition, uint8_t digitCount, bool commonAnode);
+    void SegmentNumber(int value, uint8_t digitPosition, uint8_t digitCount, bool commonAnode);
+    void LEDFlash(int duration, uint8_t pin);
+    void LEDSequence(int duration, uint8_t pin);
+    void LEDChase(uint8_t repetition, int duration, uint8_t startPin, uint8_t endPin, bool reverse);
+    void LEDRandomFlash(uint8_t repetition, int duration, uint8_t startPin, uint8_t endPin);
+    void LEDRandomToggle(uint8_t repetition, int duration, uint8_t startPin, uint8_t endPin);
+    void LEDMirrorChase(uint8_t repetition, int duration, uint8_t startPin, uint8_t endPin, uint8_t divisor);
   private:
     uint8_t _IC;
     uint8_t _SER;
