@@ -385,8 +385,7 @@
         <div class="sidebar-title">DOC_CAT API</div>
         <div class="sidebar-subtitle">LP503X API Reference</div>
 
-        <input type="text" id="searchInput" class="search-box" placeholder="Search functions..."
-            onkeyup="filterNav()">
+        <input type="text" id="searchInput" class="search-box" placeholder="Search functions..." onkeyup="filterNav()">
 
         <div class="nav-section">
             <div class="nav-section-title"><a href="#main-content"
@@ -395,7 +394,7 @@
                 <li class="nav-item"><a href="#overview" class="nav-link">Overview</a></li>
                 <li class="nav-item"><a href="#basic-example" class="nav-link">Basic Example</a></li>
                 <li class="nav-item"><a href="#registers" class="nav-link">Registers & Constants</a></li>
-                <li class="nav-item"><a href="#initialization" class="nav-link">Initialization</a></li>
+                <li class="nav-item"><a href="#initialization" class="nav-link">Initialization & Constructor</a></li>
             </ul>
         </div>
 
@@ -966,14 +965,15 @@
             </table>
         </section>
 
-        <!-- Initialization -->
+        <!-- Initialization & Constructor -->
         <section id="initialization">
-            <h2>Initialization</h2>
+            <h2>Initialization & Constructor</h2>
 
-            <div class="func-card" id="LP503X_initialization">
+            <div class="func-card" id="LP503X_constructor">
                 <div class="func-header">
-                    <div class="func-signature"><span class="dataType">#include</span> &lt;DOC_CAT.h&gt;</div>
-                    <div class="func-type">Initialization</div>
+                    <div class="func-signature"><span style="color: #c084fc;">LP503X</span>(<span
+                            class="dataType">uint8_t</span> I2C_ADDR)</div>
+                    <div class="func-type">Constructor</div>
                 </div>
                 <div class="func-desc">Includes the DOC_CAT library and provides the LP503X constructor for initializing
                     the driver.</div>
