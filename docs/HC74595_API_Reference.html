@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HC74595 API Reference</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #34d399;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --border-color: #334155;
+            --code-bg: #090d16;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        #sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            z-index: 100;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            margin-bottom: 1.25rem;
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .nav-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.2rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.35rem 0.6rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+
+        /* Main Content */
+        #main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1200px;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-green);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin: 2.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 1.5rem 0;
+            background-color: var(--bg-secondary);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 0.65rem 0.9rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        td code {
+            color: var(--accent-amber);
+            background-color: var(--code-bg);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        /* Function Cards */
+        .func-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .func-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .func-signature {
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: var(--accent-green);
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .dataType {
+            color: #6699ff;
+        }
+
+        .func-type {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-purple);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 0.5rem;
+        }
+
+        .func-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Code Block Container */
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin: 0.75rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 1rem;
+            background-color: var(--bg-tertiary);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent-blue);
+            color: #000;
+        }
+
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+        }
+
+        /* Syntax Highlighting Colors */
+        .c-kw {
+            color: #f43f5e;
+            font-weight: bold;
+        }
+
+        .c-fn {
+            color: #38bdf8;
+        }
+
+        .c-cm {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .c-num {
+            color: #f59e0b;
+        }
+
+        .c-var {
+            color: #34d399;
+        }
+
+        /* Toast notification */
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: var(--accent-blue);
+            color: #000;
+            text-align: center;
+            border-radius: 4px;
+            padding: 0.75rem;
+            position: fixed;
+            z-index: 1000;
+            bottom: 30px;
+            right: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Back to Top Button */
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 10px;
+            z-index: 999;
+            width: 70px;
+            height: 45px;
+            padding: 0 10px;
+            white-space: nowrap;
+            border: 1px solid var(--accent-blue);
+            border-radius: 50px;
+            background-color: var(--accent-blue);
+            color: var(--bg-primary);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        #backToTop:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-title">DOC_CAT API</div>
+        <div class="sidebar-subtitle">HC74595 API Reference</div>
+
+        <input type="text" id="searchInput" class="search-box" placeholder="Search functions..." onkeyup="filterNav()">
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#main-content"
+                    style="color: inherit; text-decoration: none;">Getting Started</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#overview" class="nav-link">Overview</a></li>
+                <li class="nav-item"><a href="#basic-example" class="nav-link">Basic Example</a></li>
+                <li class="nav-item"><a href="#initialization" class="nav-link">Initialization & Constructor</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#core-output-controls"
+                    style="color: inherit; text-decoration: none;">Core Output Control Methods</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#Update" class="nav-link">Update()</a></li>
+                <li class="nav-item"><a href="#NoUpdate" class="nav-link">NoUpdate(int, bool)</a></li>
+                <li class="nav-item"><a href="#SetAll" class="nav-link">SetAll(bool)</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#binary-conversion-methods"
+                    style="color: inherit; text-decoration: none;">Binary Conversion Methods</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#NumberToBinary" class="nav-link">NumberToBinary(int, bool)</a></li>
+                <li class="nav-item"><a href="#CharacterToBinary" class="nav-link">CharacterToBinary(char, bool)</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#sevensegment-display-methods"
+                    style="color: inherit; text-decoration: none;">Seven-Segment Display Methods</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#circuit-diagram-block" class="nav-link">Circuit Diagram</a></li>
+                <li class="nav-item"><a href="#Sevensegment" class="nav-link">Sevensegment(uint8_t, uint8_t, uint8_t,
+                        bool)</a></li>
+                <li class="nav-item"><a href="#SegmentNumber-double" class="nav-link">SegmentNumber(double, uint8_t,
+                        uint8_t, bool)</a>
+                </li>
+                <li class="nav-item"><a href="#SegmentNumber-int" class="nav-link">SegmentNumber(int, uint8_t, uint8_t,
+                        bool)</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><a href="#led-effects-methods"
+                    style="color: inherit; text-decoration: none;">LED Animation & Visual Effects</a></div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#LEDFlash" class="nav-link">LEDFlash(int, uint8_t)</a></li>
+                <li class="nav-item"><a href="#LEDSequence" class="nav-link">LEDSequence(int, uint8_t)</a></li>
+                <li class="nav-item"><a href="#LEDChase" class="nav-link">LEDChase(uint8_t, int, uint8_t, uint8_t,
+                        bool)</a></li>
+                <li class="nav-item"><a href="#LEDRandomFlash" class="nav-link">LEDRandomFlash(uint8_t, int, uint8_t,
+                        uint8_t)</a></li>
+                <li class="nav-item"><a href="#LEDRandomToggle" class="nav-link">LEDRandomToggle(uint8_t, int, uint8_t,
+                        uint8_t)</a></li>
+                <li class="nav-item"><a href="#LEDMirrorChase" class="nav-link">LEDMirrorChase(uint8_t, int, uint8_t,
+                        uint8_t, uint8_t)</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <header>
+            <h1>HC74595 API Reference</h1>
+            <div class="header-desc">Complete Arduino API reference for Texas Instruments / NXP
+                <a href="https://www.ti.com/product/SN74HC595"
+                    style="color: inherit; text-decoration: none;">SN74HC595</a>
+                8-bit serial-in, parallel-out shift registers.
+            </div>
+            <div class="badge-container">
+                <span class="badge">Version 1.2.0</span>
+                <span class="badge">SPI / GPIO Protocol</span>
+                <span class="badge">SN74HC595</span>
+                <span class="badge">DOC_CAT Library</span>
+            </div>
+        </header>
+
+        <!-- Overview -->
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>The
+                <code><a href="https://github.com/DinuraPasan/DOC_CAT/blob/main/src/HC74595.cpp" style="color: inherit; text-decoration: none;">HC74595</a></code>
+                library provides high-performance, low-RAM-overhead control over cascaded SN74HC595 shift registers. It
+                simplifies output pin manipulation, supports dynamic numerical and character binary visualizations,
+                multiplexed 7-segment display rendering (integer/floating point), and pre-built visual LED chase/flash
+                animation routines.
+            </p>
+        </section>
+
+        <!-- Basic Example -->
+        <section id="basic-example">
+            <h2>Basic Example</h2>
+            <p>Below is a minimal initialization and setup example using the
+                <code><a href="https://github.com/DinuraPasan/DOC_CAT/blob/main/src/HC74595.cpp" style="color: inherit; text-decoration: none;">HC74595</a></code>
+                class included within the DOC_CAT library.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Arduino</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="c-cm">// Include DOC_CAT header file</span>
+<span class="c-kw">#include</span> <span class="c-var">&lt;DOC_CAT.h&gt;</span>
+
+<span class="c-cm">// Pin Definitions</span>
+<span class="c-kw">uint8_t</span> SER = <span class="c-num">10</span>;     <span class="c-cm">// Arduino pin connected to pin 14 (DS / data) of the 74HC595</span>
+<span class="c-kw">uint8_t</span> RCLK = <span class="c-num">11</span>;    <span class="c-cm">// Arduino pin connected to pin 12 (ST_CP / latch) of the 74HC595</span>
+<span class="c-kw">uint8_t</span> SRCLK = <span class="c-num">12</span>;   <span class="c-cm">// Arduino pin connected to pin 11 (SH_CP / clock) of the 74HC595</span>
+<span class="c-kw">uint8_t</span> NUMOFIC = <span class="c-num">2</span>;  <span class="c-cm">// Number of cascaded 74HC595 ICs</span>
+
+<span class="c-cm">// Instantiate HC74595 controller instance</span>
+<span class="c-fn">HC74595</span> Shift(NUMOFIC, SER, RCLK, SRCLK);
+
+<span class="c-kw">void</span> <span class="c-fn">setup</span>() {
+    <span class="c-cm">// Direct output bit manipulation without updating shift register immediately</span>
+    Shift.<span class="c-fn">NoUpdate</span>(<span class="c-num">0</span>, HIGH);
+    
+    <span class="c-cm">// Commit buffered bit states to physical IC outputs</span>
+    Shift.<span class="c-fn">Update</span>();
+}
+
+<span class="c-kw">void</span> <span class="c-fn">loop</span>() {
+    <span class="c-cm">// Main application loop</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Initialization & Constructor -->
+        <section id="initialization">
+            <h2>Initialization & Constructor</h2>
+
+            <div class="func-card" id="HC74595_constructor">
+                <div class="func-header">
+                    <div class="func-signature"><span style="color: #c084fc;">HC74595</span>(<span
+                            class="dataType">uint8_t</span> IC, <span class="dataType">uint8_t</span> SER, <span
+                            class="dataType">uint8_t</span> RCLK, <span class="dataType">uint8_t</span> SRCLK)</div>
+                    <div class="func-type">Constructor</div>
+                </div>
+                <div class="func-desc">Initializes the HC74595 shift register controller instance, configures pin modes,
+                    and dynamically allocates internal output memory buffers based on the number of cascaded ICs.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   IC    - Total number of daisy-chained 74HC595 shift registers
+//   SER   - Serial data pin connected to pin 14 (DS) of the 74HC595
+//   RCLK  - Register clock / latch pin connected to pin 12 (ST_CP) of the 74HC595
+//   SRCLK - Shift register clock pin connected to pin 11 (SH_CP) of the 74HC595
+</span>
+<span class="c-kw">#include</span> <span class="c-var">&lt;DOC_CAT.h&gt;</span>
+
+<span class="c-cm">// Instantiate object for 2 cascaded ICs using Arduino pins 10, 11, and 12</span>
+<span class="c-fn">HC74595</span> Shift(<span class="c-num">2</span>, <span class="c-num">10</span>, <span class="c-num">11</span>, <span class="c-num">12</span>);</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Output Control Methods -->
+        <section id="core-output-controls">
+            <h2>Core Output Control Methods</h2>
+
+            <div class="func-card" id="Update">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> Update()</div>
+                    <div class="func-type">Core Control</div>
+                </div>
+                <div class="func-desc">Transfers all output bit states buffered in memory to the cascaded 74HC595 shift
+                    registers and updates their physical hardware pins.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Latch memory buffer content to physical hardware pins</span>
+Shift.<span class="c-fn">Update</span>();</code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="NoUpdate">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> NoUpdate(<span
+                            class="dataType">int</span> index, <span class="dataType">bool</span> state)</div>
+                    <div class="func-type">Core Control</div>
+                </div>
+                <div class="func-desc">Changes the target state (HIGH/LOW) of a specific output bit index in RAM memory
+                    without updating the physical shift registers.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   index - Target pin index across cascaded ICs (0 to [IC * 8] - 1)
+//   state - Desired state (HIGH or LOW / true or false)
+</span>
+Shift.<span class="c-fn">NoUpdate</span>(<span class="c-num">0</span>, HIGH); <span class="c-cm">// Stage output 0 state to HIGH in memory buffer</span>
+Shift.<span class="c-fn">Update</span>();        <span class="c-cm">// Apply changes to hardware outputs</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="SetAll">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> SetAll(<span
+                            class="dataType">bool</span> state)</div>
+                    <div class="func-type">Core Control</div>
+                </div>
+                <div class="func-desc">Sets all outputs across all cascaded shift registers to the specified state (HIGH
+                    or LOW) and immediately updates the physical IC outputs.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   state - Target state for all output pins (HIGH or LOW)
+</span>
+Shift.<span class="c-fn">SetAll</span>(<span class="c-kw">true</span>);  <span class="c-cm">// Turn ON all shift register outputs</span>
+delay(<span class="c-num">1000</span>);
+Shift.<span class="c-fn">SetAll</span>(<span class="c-kw">false</span>); <span class="c-cm">// Turn OFF all shift register outputs</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Binary Conversion Methods -->
+        <section id="binary-conversion-methods">
+            <h2>Binary Conversion Methods</h2>
+
+            <div class="func-card" id="NumberToBinary">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> NumberToBinary(<span
+                            class="dataType">int</span> value, <span class="dataType">bool</span> reverse)</div>
+                    <div class="func-type">Data Conversion</div>
+                </div>
+                <div class="func-desc">Converts a 16-bit integer value into binary output states across cascaded shift
+                    registers and immediately updates outputs.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   value   - Integer numerical value (0 to 65535) to render in binary format
+//   reverse - Bit-mapping direction (true = direct byte write, false = inverted bit map)
+</span>
+Shift.<span class="c-fn">NumberToBinary</span>(<span class="c-num">12345</span>, <span class="c-kw">true</span>); <span class="c-cm">// Convert integer 12345 to binary LED array output</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="CharacterToBinary">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> CharacterToBinary(<span
+                            class="dataType">char</span> value, <span class="dataType">bool</span> reverse)</div>
+                    <div class="func-type">Data Conversion</div>
+                </div>
+                <div class="func-desc">Converts an ASCII character into its binary bit representation across shift
+                    registers and updates outputs.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   value   - ASCII character (e.g., 'A', 'Z') to convert to binary
+//   reverse - Bit-mapping direction selector (true or false)
+</span>
+Shift.<span class="c-fn">CharacterToBinary</span>(<span class="c-num">'A'</span>, <span class="c-kw">true</span>); <span class="c-cm">// Display binary representation of ASCII 'A'</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seven-Segment Display Methods -->
+        <section id="sevensegment-display-methods">
+            <h2>Seven-Segment Display Methods</h2>
+
+            <!-- Circuit Diagram Block -->
+            <div class="func-card" id="circuit-diagram-block">
+                <div class="func-header">
+                    <div class="func-signature">Circuit Diagram & Pin Management Reference</div>
+                    <div class="func-type">Hardware Layout</div>
+                </div>
+                <div class="func-desc">Schematic diagram and wiring configuration for driving 4-digit multiplexed
+                    seven-segment displays with two 74HC595 ICs.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Schematic Diagram</span>
+                    </div>
+                    <pre><code><span class="c-cm">//      |¯ ¯ 0 ¯ ¯|      |¯ ¯ 0 ¯ ¯|      |¯ ¯ 0 ¯ ¯|      |¯ ¯ 0 ¯ ¯|
+//      5         1      5         1      5         1      5         1
+//      |         |      |         |      |         |      |         |
+//      |_ _ 6 _ _|      |_ _ 6 _ _|      |_ _ 6 _ _|      |_ _ 6 _ _|
+//      |         |      |         |      |         |      |         |
+//      4         2      4         2      4         2      4         2
+//      |         |      |         |      |         |      |         |
+//      |_ _ 3 _ _| •7   |_ _ 3 _ _| •7   |_ _ 3 _ _| •7   |_ _ 3 _ _| •7
+//       Comman 01        Comman 02        Comman 03        Comman 04
+
+//                   ST_ SH_                       ST_ SH_
+//        +  Q0 DS OE CP CP MR QH       +  Q0 DS OE CP CP MR QH
+//        |  |  |  |  |  |  |  |        |  |  |  |  |  |  |  |
+//        |__|__|__|__|__|__|__|        |__|__|__|__|__|__|__|
+//        |                    |        |                    |
+//        |    74HC595 IC 01   |        |    74HC595 IC 02   |
+//        | •                  |        | •                  |
+//        |__ __ __ __ __ __ __|        |__ __ __ __ __ __ __|
+//        |  |  |  |  |  |  |  |        |  |  |  |  |  |  |  |
+//        |  |  |  |  |  |  |  |        |  |  |  |  |  |  |  |
+//        Q1 Q2 Q3 Q4 Q5 Q6 Q7 GND      Q1 Q2 Q3 Q4 Q5 Q6 Q7 GND
+
+//                        ----Pin Management----
+
+//  IC 01   Q0      -- >       All Sevensegment Display 00 (Segment A)
+//  IC 01   Q1      -- >       All Sevensegment Display 01 (Segment B)
+//  IC 01   Q2      -- >       All Sevensegment Display 02 (Segment C)
+//  IC 01   Q3      -- >       All Sevensegment Display 03 (Segment D)
+//  IC 01   Q4      -- >       All Sevensegment Display 04 (Segment E)
+//  IC 01   Q5      -- >       All Sevensegment Display 05 (Segment F)
+//  IC 01   Q6      -- >       All Sevensegment Display 06 (Segment G)
+//  IC 01   Q7      -- >       All Sevensegment Display 07 (Decimal Point)
+//  IC 02   Q0      -- >       Sevensegment Display Common 01 (Digit 1)
+//  IC 02   Q1      -- >       Sevensegment Display Common 02 (Digit 2)
+//  IC 02   Q2      -- >       Sevensegment Display Common 03 (Digit 3)
+//  IC 02   Q3      -- >       Sevensegment Display Common 04 (Digit 4)</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="Sevensegment">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> Sevensegment(<span
+                            class="dataType">uint8_t</span> segments, <span class="dataType">uint8_t</span>
+                        digitPosition, <span class="dataType">uint8_t</span> digitCount, <span
+                            class="dataType">bool</span> commonAnode)</div>
+                    <div class="func-type">Display Control</div>
+                </div>
+                <div class="func-desc">Displays a custom bit pattern on a multiplexed seven-segment display module.
+                </div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   segments      - Bitmask specifying illuminated segments (0b00000000 to 0b11111111)
+//   digitPosition - 0-based digit index to illuminate
+//   digitCount    - Total number of multiplexed digits in hardware module
+//   commonAnode   - Set true for common-anode display; false for common-cathode
+</span>
+Shift.<span class="c-fn">Sevensegment</span>(B01011101, <span class="c-num">0</span>, <span class="c-num">4</span>, <span class="c-kw">true</span>); <span class="c-cm">// Render custom segment configuration on digit 0</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="SegmentNumber-double">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> SegmentNumber(<span
+                            class="dataType">double</span> value, <span class="dataType">uint8_t</span> digitPosition,
+                        <span class="dataType">uint8_t</span> digitCount, <span class="dataType">bool</span>
+                        commonAnode)
+                    </div>
+                    <div class="func-type">Display Control</div>
+                </div>
+                <div class="func-desc">Displays a floating-point value on a multiplexed seven-segment display array,
+                    automatically parsing negative signs and decimal point placement.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   value         - Floating-point double value to display (e.g., -2.1)
+//   digitPosition - Starting digit index on display array
+//   digitCount    - Total number of multiplexed digits
+//   commonAnode   - True for Common-Anode; False for Common-Cathode
+</span>
+Shift.<span class="c-fn">SegmentNumber</span>(-<span class="c-num">2.1</span>, <span class="c-num">1</span>, <span class="c-num">4</span>, <span class="c-kw">true</span>); <span class="c-cm">// Display floating-point number "-2.1"</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="SegmentNumber-int">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> SegmentNumber(<span
+                            class="dataType">int</span> value, <span class="dataType">uint8_t</span> digitPosition,
+                        <span class="dataType">uint8_t</span> digitCount, <span class="dataType">bool</span>
+                        commonAnode)
+                    </div>
+                    <div class="func-type">Display Control</div>
+                </div>
+                <div class="func-desc">Displays an integer value on a multiplexed seven-segment display system with
+                    automatic negative sign handling.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   value         - Integer numerical value to display (e.g., 145)
+//   digitPosition - Starting digit index on display array
+//   digitCount    - Total number of multiplexed digits
+//   commonAnode   - True for Common-Anode; False for Common-Cathode
+</span>
+Shift.<span class="c-fn">SegmentNumber</span>(<span class="c-num">145</span>, <span class="c-num">1</span>, <span class="c-num">4</span>, <span class="c-kw">true</span>); <span class="c-cm">// Display integer "145" on 4-digit display</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual LED Animation Effects -->
+        <section id="led-effects-methods">
+            <h2>LED Animation & Visual Effects</h2>
+
+            <div class="func-card" id="LEDFlash">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> LEDFlash(<span
+                            class="dataType">int</span> duration, <span class="dataType">uint8_t</span> pin)</div>
+                    <div class="func-type">Animation Effect</div>
+                </div>
+                <div class="func-desc">Flashes a specified output pin ON and OFF for the designated millisecond
+                    duration.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   duration - Flash duration in milliseconds
+//   pin      - Target shift register output pin index
+</span>
+Shift.<span class="c-fn">LEDFlash</span>(<span class="c-num">100</span>, <span class="c-num">0</span>); <span class="c-cm">// Flash output pin 0 for 100 ms</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="LEDSequence">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> LEDSequence(<span
+                            class="dataType">int</span> duration, <span class="dataType">uint8_t</span> pin)</div>
+                    <div class="func-type">Animation Effect</div>
+                </div>
+                <div class="func-desc">Progressively turns ON and OFF pins sequentially from the specified highest pin
+                    index down to pin 0.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   duration - Delay between pin transitions in milliseconds
+//   pin      - Highest starting pin index in the downward sequence
+</span>
+Shift.<span class="c-fn">LEDSequence</span>(<span class="c-num">10</span>, <span class="c-num">15</span>); <span class="c-cm">// Run sequential fill and clear pattern from pin 15 to 0</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="LEDChase">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> LEDChase(<span
+                            class="dataType">uint8_t</span> repetition, <span class="dataType">int</span> duration,
+                        <span class="dataType">uint8_t</span> startPin, <span class="dataType">uint8_t</span> endPin,
+                        <span class="dataType">bool</span> reverse)
+                    </div>
+                    <div class="func-type">Animation Effect</div>
+                </div>
+                <div class="func-desc">Executes a chasing light animation sequence across a range of pins in ascending
+                    or descending direction.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   repetition - Number of times to repeat the chase animation
+//   duration   - Delay between LED state transitions in milliseconds
+//   startPin   - Beginning output pin index of range
+//   endPin     - Ending output pin index of range
+//   reverse    - Direction: true = descending (end to start), false = ascending (start to end)
+</span>
+Shift.<span class="c-fn">LEDChase</span>(<span class="c-num">5</span>, <span class="c-num">100</span>, <span class="c-num">0</span>, <span class="c-num">15</span>, <span class="c-kw">true</span>); <span class="c-cm">// Repeat reverse chase effect 5 times across pins 0 to 15</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="LEDRandomFlash">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> LEDRandomFlash(<span
+                            class="dataType">uint8_t</span> repetition, <span class="dataType">int</span> duration,
+                        <span class="dataType">uint8_t</span> startPin, <span class="dataType">uint8_t</span> endPin)
+                    </div>
+                    <div class="func-type">Animation Effect</div>
+                </div>
+                <div class="func-desc">Randomly selects and flashes individual pins ON and OFF within a defined output
+                    range.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   repetition - Number of random flashes to execute
+//   duration   - Delay time in milliseconds
+//   startPin   - Minimum pin index boundary
+//   endPin     - Maximum pin index boundary
+</span>
+Shift.<span class="c-fn">LEDRandomFlash</span>(<span class="c-num">30</span>, <span class="c-num">100</span>, <span class="c-num">0</span>, <span class="c-num">15</span>); <span class="c-cm">// Execute 30 random flashes between pins 0 and 15</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="LEDRandomToggle">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> LEDRandomToggle(<span
+                            class="dataType">uint8_t</span> repetition, <span class="dataType">int</span> duration,
+                        <span class="dataType">uint8_t</span> startPin, <span class="dataType">uint8_t</span> endPin)
+                    </div>
+                    <div class="func-type">Animation Effect</div>
+                </div>
+                <div class="func-desc">Randomly turns outputs ON and OFF within a pin range to generate pseudo-random
+                    patterns.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   repetition - Number of toggle iterations to perform
+//   duration   - Timing delay in milliseconds between toggles
+//   startPin   - Lower pin index boundary
+//   endPin     - Upper pin index boundary
+</span>
+Shift.<span class="c-fn">LEDRandomToggle</span>(<span class="c-num">30</span>, <span class="c-num">100</span>, <span class="c-num">0</span>, <span class="c-num">15</span>); <span class="c-cm">// Perform 30 random pin state toggles across outputs 0 to 15</span></code></pre>
+                </div>
+            </div>
+
+            <div class="func-card" id="LEDMirrorChase">
+                <div class="func-header">
+                    <div class="func-signature"><span class="dataType">void</span> LEDMirrorChase(<span
+                            class="dataType">uint8_t</span> repetition, <span class="dataType">int</span> duration,
+                        <span class="dataType">uint8_t</span> startPin, <span class="dataType">uint8_t</span> endPin,
+                        <span class="dataType">uint8_t</span> divisor)
+                    </div>
+                    <div class="func-type">Animation Effect</div>
+                </div>
+                <div class="func-desc">Runs a mirrored chasing light animation from both outer boundaries toward the
+                    center point of a designated pin range.</div>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Arduino</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="c-cm">// Parameters:
+//   repetition - Number of animation cycles to repeat
+//   duration   - Transition delay in milliseconds
+//   startPin   - Start pin boundary
+//   endPin     - End pin boundary
+//   divisor    - Divisor specifying span convergence ratio (typically 2 or 3)
+</span>
+Shift.<span class="c-fn">LEDMirrorChase</span>(<span class="c-num">5</span>, <span class="c-num">100</span>, <span class="c-num">0</span>, <span class="c-num">15</span>, <span class="c-num">2</span>); <span class="c-cm">// Run mirrored chase across 16 outputs using a divisor of 2</span></code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast">Copied to clipboard!</div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" onclick="scrollToTop()" title="Back to Top"><strong>⬆</strong></button>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Search Filter Functionality
+        function filterNav() {
+            const query = document.getElementById('searchInput').value
+                .toLowerCase()
+                .replace(/\*/g, '')
+                .trim();
+
+            const searchWords = query.split(/\s+/).filter(Boolean);
+            const sections = document.querySelectorAll('.nav-section');
+
+            sections.forEach(section => {
+                const title = section.querySelector('.nav-section-title');
+                const navItems = section.querySelectorAll('.nav-item');
+
+                const titleText = title.textContent.toLowerCase()
+                    .replace(/\s+/g, ' ').trim();
+
+                const titleMatch = searchWords.every(word =>
+                    titleText.includes(word)
+                );
+
+                let hasMatch = false;
+
+                navItems.forEach(item => {
+                    const itemText = item.textContent.toLowerCase()
+                        .replace(/\s+/g, ' ').trim();
+
+                    const itemMatch = searchWords.every(word =>
+                        itemText.includes(word)
+                    );
+
+                    item.style.display = (itemMatch || titleMatch) ? 'block' : 'none';
+
+                    if (itemMatch) hasMatch = true;
+                });
+
+                section.style.display = (titleMatch || hasMatch) ? 'block' : 'none';
+            });
+        }
+
+        // Clipboard Copy Handler with Fallback & Visual Feedback
+        function copyCode(buttonElement) {
+            const container = buttonElement.closest('.code-container');
+            const codeBlock = container.querySelector('code');
+            const codeText = codeBlock.innerText || codeBlock.textContent;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(codeText).then(() => {
+                    showToast(buttonElement);
+                }).catch(err => {
+                    fallbackCopy(codeText, buttonElement);
+                });
+            } else {
+                fallbackCopy(codeText, buttonElement);
+            }
+        }
+
+        function fallbackCopy(text, buttonElement) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                showToast(buttonElement);
+            } catch (err) {
+                console.error('Fallback copy failed: ', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(buttonElement) {
+            const originalText = buttonElement.textContent;
+            buttonElement.textContent = 'Copied!';
+            buttonElement.style.backgroundColor = 'var(--accent-green)';
+            buttonElement.style.color = '#000';
+
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                buttonElement.textContent = originalText;
+                buttonElement.style.backgroundColor = '';
+                buttonElement.style.color = '';
+                toast.classList.remove('show');
+            }, 1800);
+        }
+
+        // Back to Top Functionality
+        const backToTop = document.getElementById("backToTop");
+
+        window.addEventListener("scroll", () => {
+            backToTop.style.display = window.scrollY > 50 ? "block" : "none";
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+    </script>
+</body>
+
+</html>
